@@ -9,12 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.2.0",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "babel-plugin-react-compiler": "^0.0.0-experimental-592953e-20240517",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.2.6",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "15.0.0-rc.0",
     "react": "^19.0.0-rc-f994737d14-20240522",
     "react-dom": "^19.0.0-rc-f994737d14-20240522",
+    "react-hook-form": "^7.51.5",
     "react-leaflet": "^5.0.0-rc.1"
   },
   "devDependencies": {
