@@ -2,7 +2,7 @@
 import AdvCard from "@/components/AdvCard";
 import initialApartments from "@/state";
 import {Apartment} from "@/types";
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from '@chakra-ui/react';
+import {Tab, TabList, TabPanel, TabPanels, Tabs, Checkbox, Stack} from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import Link from "next/link";
 import React, {useEffect, useMemo, useState} from "react";
@@ -21,70 +21,56 @@ export default function Home() {
   const [filtered, setFiltered] = useState<Apartment[]>([])
 
   useEffect(() => {
-    setFiltered(prevState => rooms.length ? [...initialApartments].filter(x => rooms.includes(x.properties.rooms)) : initialApartments)
+    setFiltered(prevState => rooms.length ? [...apartments].filter(x => rooms.includes(x.properties.rooms)) : apartments)
   }, [rooms]);
   console.log('rooms', rooms)
   return (
     <>
-      <h1>Главная</h1>
-      <p>Результат фильтра: {filtered.length}</p>
-      <div>
-        <div  className='flex items-center gap-2'>
-          Количество комнат
-          <div className='flex items-center gap-2'>
-            <div className='flex items-center gap-1'>
-              <input
-                id="1"
-                type="checkbox"
-                onChange={(event) => {
-                  setState(prev =>
-                    prev.rooms.find(x => x === 1) ?
-                      {...prev, rooms: prev.rooms.filter(x => x !== 1)} :
-                      {...prev, rooms: prev.rooms.concat([1])})
-                }}
-              />
-              <label htmlFor="1">1-комнатные</label>
-
-            </div>
-            <div className='flex items-center gap-1'>
-              <input
-                id="2"
-                type="checkbox"
-                onChange={(event) => {
-                  setState(prev =>
-                    prev.rooms.find(x => x === 2) ?
-                      {...prev, rooms: prev.rooms.filter(x => x !== 2)} :
-                      {...prev, rooms: prev.rooms.concat([2])})
-                }}/>
-              <label htmlFor="2">2-комнатные</label>
-
-            </div>
-
-
-            <div className='flex items-center gap-1'>
-              <input
-                id="3"
-                type="checkbox"
-                onChange={(event) => {
-                  setState(prev =>
-                    prev.rooms.find(x => x === 3) ?
-                      {...prev, rooms: prev.rooms.filter(x => x !== 3)} :
-                      {...prev, rooms: prev.rooms.concat([3])})
-                }}/>
-              <label htmlFor="3">3-комнатные</label>
-
-            </div>
-
-          </div>
+      <h1 >Результат фильтра: {filtered.length}</h1>
+      <div className='flex items-center gap-8 flex-wrap'>
+        <div>
+          Кол-во комнат:
         </div>
+        <Stack spacing={[8, 16]} direction={[ 'row']}>
+          <Checkbox
+            id="1"
+            size="lg"
+            onChange={(event) => {
+              setState(prev =>
+                prev.rooms.find(x => x === 1) ?
+                  {...prev, rooms: prev.rooms.filter(x => x !== 1)} :
+                  {...prev, rooms: prev.rooms.concat([1])})
+            }}
+          >1</Checkbox>
+
+          <Checkbox
+            id="2"
+            size="lg"
+            onChange={(event) => {
+              setState(prev =>
+                prev.rooms.find(x => x === 2) ?
+                  {...prev, rooms: prev.rooms.filter(x => x !== 2)} :
+                  {...prev, rooms: prev.rooms.concat([2])})
+            }}>2</Checkbox>
+          <Checkbox
+            id="3"
+            size="lg"
+            onChange={(event) => {
+              setState(prev =>
+                prev.rooms.find(x => x === 3) ?
+                  {...prev, rooms: prev.rooms.filter(x => x !== 3)} :
+                  {...prev, rooms: prev.rooms.concat([3])})
+            }}>{3}</Checkbox>
+
+        </Stack>
       </div>
       <Tabs>
-      <TabList>
+        <TabList>
           <Tab>Карта</Tab>
           <Tab>Список</Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel className="!p-0 !x-0">
             <div className="bg-white-700 mx-auto my-5 w-full h-[480px] md:h-[640px]">
               <DynamicLeafletMap ads={filtered}/>
             </div>

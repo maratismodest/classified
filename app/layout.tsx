@@ -29,7 +29,7 @@ export default function RootLayout({
     <body className={`${geistSans.variable} ${geistMono.variable}`}>
     <Providers>
       <header
-        className='border p-2 text-center flex items-center justify-center fixed inset-x-0 top-0 z-50 h-[52px]'>
+        className='border p-2 text-center flex items-center justify-center fixed inset-x-0 top-0 z-50 h-[52px] bg-white'>
         <Link href='/'>Доска недвижимости в Софии</Link>
       </header>
       <main>
