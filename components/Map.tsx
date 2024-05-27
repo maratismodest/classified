@@ -58,7 +58,7 @@ const Map = (Map: MapProps) => {
               position={apartment.coordinates}
               draggable={false}
               eventHandlers={{
-                mouseover: (event) => event.target.openPopup(),
+                click: (event) => event.target.openPopup(),
               }}
             >
               <Popup>
