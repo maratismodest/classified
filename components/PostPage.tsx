@@ -1,17 +1,14 @@
 'use client';
 import ImageInView from '@/components/ImageInView';
-import useLockedBody from "@/hooks/useLockedBody";
-import {Apartment} from "@/types";
-import {NO_IMAGE} from "@/utils/constants";
-import clsx from "clsx";
-// import useLockedBody from '@/hooks/useLockedBody';
-// import { NO_IMAGE } from '@/utils/constants';
-// import type { Post } from '@prisma/client';
+import useLockedBody from '@/hooks/useLockedBody';
+import { NO_IMAGE } from '@/utils/constants';
+import type { Post } from '@prisma/client';
+import clsx from 'clsx';
 import Image from 'next/image';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 type Props = {
-  post: Apartment;
+  post: Post;
 };
 
 const styles =
@@ -23,7 +20,7 @@ export default function PostPage<NextPage>({ post }: Props) {
 
   const ul = useRef<HTMLUListElement>(null);
 
-  const { title } = post;
+  const { description } = post;
 
   const [open, setOpen] = useState(false);
 
@@ -68,7 +65,6 @@ export default function PostPage<NextPage>({ post }: Props) {
             draggable={false}
             src={images[current]}
             alt="image"
-            title={title}
             fill={true}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
             style={{ objectFit: 'contain' }}

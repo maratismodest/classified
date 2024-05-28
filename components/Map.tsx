@@ -1,20 +1,19 @@
 "use client"
 
-import {Apartment} from "@/types";
+import {Post} from "@prisma/client";
 import Image from 'next/image'
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import Link from "next/link";
-import {useState} from "react";
-import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 
 
 interface MapProps {
   // posix: LatLngExpression | LatLngTuple,
   zoom?: number,
-  ads: Apartment[]
+  posts: Post[]
 }
 
 const defaults = {
@@ -22,27 +21,19 @@ const defaults = {
 }
 
 const Map = (Map: MapProps) => {
-  const [apartment, setApartment] = useState<Apartment | undefined>()
   const {
     zoom = defaults.zoom,
     // posix
-    ads
+    posts
   } = Map
   const handleMarkerClick = (data: any) => {
     console.log('Marker clicked!', data);
-    const {latlng} = data
-    const {lat, lng} = latlng
-    // @ts-ignore
-    const item = apartments.find(({coordinates}) => coordinates[0] == Number(lat))
-    if (item) {
-      setApartment(item)
-    }
   };
 
   return (
     <>
       <MapContainer
-        center={[ 42.6977,  23.3219 ]}
+        center={[42.6977, 23.3219]}
         zoom={zoom}
         scrollWheelZoom={false}
         style={{height: "100%", width: "100%"}}
@@ -52,23 +43,23 @@ const Map = (Map: MapProps) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {
-          ads.map(apartment =>
+          posts.map(post =>
             <Marker
-              key={apartment.id}
-              position={apartment.coordinates}
+              key={post.id}
+              position={[Number(post.latitude), Number(post.longitude)]}
               draggable={false}
               eventHandlers={{
                 click: (event) => event.target.openPopup(),
               }}
             >
               <Popup>
-                <Link href={`/adv/${apartment.id}`} className='flex gap-2'>
+                <Link href={`/adv/${post.id}`} className='flex gap-2'>
                   <div className='aspect-square w-24 h-24 relative'>
-                    <Image src={apartment.image} fill alt='' style={{objectFit: 'cover'}}/>
+                    <Image src={post.preview} fill alt='' style={{objectFit: 'cover'}}/>
                   </div>
                   <div className='flex flex-col h-fit truncate'>
-                    <h1 className='text-lg text-black'>{apartment.title}</h1>
-                    <p className='!m-0 text-black'>Цена: <span className='font-bold'>{apartment.price}</span></p>
+                    <h1 className='text-lg text-black'>{post.rooms}</h1>
+                    <p className='!m-0 text-black'>Цена: <span className='font-bold'>{post.price}</span></p>
                   </div>
                 </Link>
               </Popup>
