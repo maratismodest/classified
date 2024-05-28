@@ -1,5 +1,6 @@
 'use client';
 
+import Price from '@/components/Price';
 import { routes } from '@/utils/constants';
 import { Post } from '@prisma/client';
 import { LatLngExpression, LatLngTuple } from 'leaflet';
@@ -53,15 +54,14 @@ const Map = (Map: MapProps) => {
           >
             <Popup>
               <Link href={`${routes.post}/${post.id}`} className="flex gap-2">
-                <div className="relative aspect-square h-24 w-24">
+                <div className="relative aspect-square h-16 w-16">
                   <Image src={post.preview} fill alt="" style={{ objectFit: 'cover' }} />
                 </div>
-                <div className="flex h-fit flex-col truncate">
-                  <h1 className="text-lg text-black">{post.rooms}</h1>
-                  <p className="!m-0 text-black">
-                    Цена: <span className="font-bold">{post.price}</span>
-                  </p>
-                </div>
+                <ul className="flex h-fit flex-col truncate !text-sm">
+                  <li>{post.rooms}-x квартира</li>
+                  <li>Площадь: {post.meters}</li>
+                  <li>Цена:{post.price}</li>
+                </ul>
               </Link>
             </Popup>
           </Marker>
