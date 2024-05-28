@@ -57,7 +57,7 @@ export default function AuthProvider({ children }: Props) {
         const decoded = await decodeToken(token);
         // если токен валидный
         if (decoded) {
-          console.log('decoded', decoded);
+          // console.log('decoded', decoded);
           // создаем/обновляем пользователя
           const res = await loginTelegram(decoded as User);
 
@@ -96,7 +96,7 @@ export default function AuthProvider({ children }: Props) {
 
   // @ts-ignore
   useEffect(() => {
-    console.log('token', token);
+    // console.log('token', token);
     if (token) {
       localStorage.setItem('token', token);
       setTelegram(1);

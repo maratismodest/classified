@@ -1,5 +1,5 @@
 'use client';
-import {getCurrencySymbol} from '@/components/Price/utils';
+import { getCurrencySymbol } from '@/components/Price/utils';
 import SelectHeadlessUi from '@/components/SelectHeadlessUi';
 import Spinner from '@/components/ui/Spinner';
 import useApp from '@/hooks/useApp';
@@ -7,18 +7,18 @@ import useAuth from '@/hooks/useAuth';
 import ImagesModuleInput from '@/modules/PostModule/ImagesModule/ImagesModuleInput';
 import ImagesModulePreview from '@/modules/PostModule/ImagesModule/ImagesModulePreview';
 import imageHandler from '@/modules/PostModule/ImagesModule/utils';
-import {stateAtom} from '@/state';
+import { stateAtom } from '@/state';
 import buttonStyles from '@/styles/buttonStyles';
 import inputStyles from '@/styles/inputStyles';
-import {CreatePostDTO} from '@/types';
+import { CreatePostDTO } from '@/types';
 import postAd from '@/utils/api/prisma/postPost';
-import {Field, Label} from '@headlessui/react';
-import {yupResolver} from '@hookform/resolvers/yup';
+import { Field, Label } from '@headlessui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
-import {useAtomValue} from 'jotai';
-import React, {useState} from 'react';
-import {FormProvider, SubmitHandler, useForm, useWatch} from 'react-hook-form';
-import {defaultValues, IFormInput, schema} from '../yup';
+import { useAtomValue } from 'jotai';
+import React, { useState } from 'react';
+import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { defaultValues, IFormInput, schema } from '../yup';
 
 interface PostModuleProps {
   onSubmitOptional?: () => Promise<void> | void;
@@ -28,8 +28,8 @@ export default function CreatePostModule({
                                            onSubmitOptional = async () => undefined,
                                          }: PostModuleProps) {
   const isTelegram = useAtomValue(stateAtom);
-  const {categories} = useApp();
-  const {user, loading: userLoading} = useAuth();
+  const { categories } = useApp();
+  const { user, loading: userLoading } = useAuth();
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -39,7 +39,7 @@ export default function CreatePostModule({
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
     reset,
     setValue,
     trigger,
@@ -50,10 +50,10 @@ export default function CreatePostModule({
 
   const [loading, setLoading] = useState(false);
 
-  const images = useWatch({name: 'images', control}) as string[];
+  const images = useWatch({ name: 'images', control }) as string[];
 
   if (userLoading) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   if (!user) {
@@ -80,21 +80,16 @@ export default function CreatePostModule({
         images: images.join('||'),
         userId: user.id,
         published: Boolean(data.post),
-        rooms: data.rooms
+        rooms: data.rooms,
+        latitude: '42.7000',
+        longitude: '23.3200',
       };
 
       const post = await postAd(createPostDto);
-
-      // const {result}: TelegramResponseProps = (await postTelegram(
-      //   createPostDto,
-      //   user,
-      //   categories
-      // )) as TelegramResponseProps;
-      // const telegram = await postMessage({ id: result[0]?.message_id, postId: post.id });
-      // console.log('_telegram', telegram);
-      reset();
-      alert('Объявление создано!');
-      await onSubmitOptional();
+      // console.log('post', post);
+      // reset();
+      // alert('Объявление создано!');
+      // await onSubmitOptional();
     } catch (e) {
       console.log(e);
       alert('Что-то пошло не так');
@@ -109,7 +104,7 @@ export default function CreatePostModule({
         <h1>Новое объявление{isTelegram === 1 ? '.' : '!'}</h1>
         <Field>
           <Label>Выберите категорию</Label>
-          <SelectHeadlessUi options={categories} name="categoryId"/>
+          <SelectHeadlessUi options={categories} name="categoryId" />
           <span className="text-red">{errors.categoryId?.message}</span>
         </Field>
 
@@ -131,19 +126,29 @@ export default function CreatePostModule({
 
         <div>
           <label htmlFor="description">Описание</label>
-          <textarea rows={5} cols={5} {...register('description')} name="description" className="w-full"/>
+          <textarea rows={5} cols={5} {...register('description')} name="description" className="w-full" />
           <span className="text-red">{errors.description?.message}</span>
         </div>
+
+        <Field>
+          <Label>Количество комнат</Label>
+          <input
+            type="number"
+            {...register('rooms')}
+            className={clsx(inputStyles(), 'block w-full')}
+          />
+          <span className="text-red">{errors.rooms?.message}</span>
+        </Field>
 
         <ImagesModuleInput
           images={images}
           imageHandler={files => imageHandler(files, images, methods, setLoading)}
           methods={methods}
         />
-        <ImagesModulePreview images={images} setImages={images => setValue('images', images)}/>
+        <ImagesModulePreview images={images} setImages={images => setValue('images', images)} />
 
         <div>
-          <input type="checkbox" {...register('agreement')} name="agreement" id="agreement"/>
+          <input type="checkbox" {...register('agreement')} name="agreement" id="agreement" />
           <label htmlFor="agreement">
             &nbsp;<span>Соглашаюсь с</span>&nbsp;
             <a
@@ -159,12 +164,12 @@ export default function CreatePostModule({
         </div>
 
         <div className="sr-only">
-          <input type="checkbox" {...register('post')} name="post" id="post"/>
+          <input type="checkbox" {...register('post')} name="post" id="post" />
           <label htmlFor="post"> Автоматически подать на сайт</label>
         </div>
 
         <button
-          className={clsx(buttonStyles({size: 'medium'}), 'mt-6 w-full')}
+          className={clsx(buttonStyles({ size: 'medium' }), 'mt-6 w-full')}
           type="submit"
           disabled={loading || categories.length === 0}
         >

@@ -29,6 +29,8 @@ export interface CreatePostDTO {
   categoryId: number;
   published: boolean;
   rooms: number;
+  latitude:string;
+  longitude:string;
 }
 
 

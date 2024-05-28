@@ -1,72 +1,24 @@
-'use client'
-import {useForm} from 'react-hook-form'
-import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
-  Input,
-  Button,
-  Textarea,
-  Stack,
-  Heading,
-  Text,
-  useToast,
-} from '@chakra-ui/react'
+'use client';
+import Spinner from '@/components/ui/Spinner';
+import useAuth from '@/hooks/useAuth';
+import CreatePostModule from '@/modules/PostModule/CreatePostModule/CreatePostModule';
+import ProfileNoUser from '@/pages-lib/profile/ProfileNoUser';
+import { routes } from '@/utils/constants';
+import { useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
 
-export default function HookForm() {
-  const {
-    handleSubmit,
-    register,
-    formState: {errors, isSubmitting},
-  } = useForm({
-    defaultValues: {
-      description: '',
-      price: 0
-    }
-  })
+export default function AddPage<NextPage>() {
+  const { user, loading: userLoading } = useAuth();
+  const router = useRouter();
+  const onSubmitOptional = useCallback(async () => router.push(routes.profile), []);
 
-  function onSubmit(values: any) {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2))
-        resolve()
-      }, 3000)
-    })
+  if (userLoading) {
+    return <Spinner />;
   }
 
+  if (!user) {
+    return <ProfileNoUser />;
+  }
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={Boolean(errors.description)}>
-        <FormLabel htmlFor='name'>Цена</FormLabel>
-        <Input type="number"
-               id='price'
-               placeholder='Цена'
-               {...register('price', {
-                 required: 'This is required',
-               })}
-        />
-        <FormErrorMessage>
-          {errors.price && errors.price.message}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl isInvalid={Boolean(errors.description)}>
-        <FormLabel htmlFor='name'>Описание</FormLabel>
-        <Textarea
-          id='description'
-          placeholder='Описание'
-          {...register('description', {
-            required: 'This is required',
-            minLength: {value: 4, message: 'Minimum length should be 4'},
-          })}
-        />
-        <FormErrorMessage>
-          {errors.description && errors.description.message}
-        </FormErrorMessage>
-      </FormControl>
-      <Button mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
-        Submit
-      </Button>
-    </form>
-  )
+  return <CreatePostModule onSubmitOptional={onSubmitOptional} />;
 }

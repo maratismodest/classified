@@ -1,10 +1,16 @@
 import Header from "@/components/Header/Header";
+import AppProvider from "@/context/AppContext";
+import AuthProvider from "@/context/AuthContext";
+import ModalProvider from "@/context/ModalContext";
+import QueryProvider from "@/context/QueryContext";
+import TelegramProvider from "@/context/TelegramContext";
+import ToastProvider from "@/context/ToastContext";
 import {Providers} from "@/providers/chakra-provider";
 import type {Metadata} from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Link from "next/link";
-import React from "react";
+import React, {Suspense} from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,14 +32,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
     <body className={`${geistSans.variable} ${geistMono.variable}`}>
-    <Providers>
-      <Header/>
-      <main>
-        {children}
-      </main>
-    </Providers>
+    <Suspense>
+      <Providers>
+        <QueryProvider>
+          <TelegramProvider>
+            <AuthProvider>
+              <AppProvider>
+                <ModalProvider>
+                  <ToastProvider>
+                    {/*<FavouritesProvider>*/}
+                    <Header/>
+
+                    <main>
+                      {children}
+                    </main>
+                  </ToastProvider>
+                </ModalProvider>
+              </AppProvider>
+            </AuthProvider>
+          </TelegramProvider>
+        </QueryProvider>
+      </Providers>
+    </Suspense>
     </body>
     </html>
   );

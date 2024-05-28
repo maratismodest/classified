@@ -101,7 +101,7 @@ export default function EditPostModule({
       // await postTelegramNew(editPostDto, user, categories);
       // if (data.post) {
       const post = await updatePostPrisma(editPostDto);
-      console.log('post', post);
+      // console.log('post', post);
       // }
       reset();
       tg?.MainButton.show();

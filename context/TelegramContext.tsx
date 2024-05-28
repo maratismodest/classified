@@ -24,7 +24,7 @@ export default function TelegramProvider({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    console.log('TgUpdated', tg);
+    // console.log('TgUpdated', tg);
   }, [tg]);
 
   const value = useMemo(() => {

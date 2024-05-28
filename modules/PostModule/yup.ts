@@ -19,7 +19,7 @@ export const schema = object({
     .max(4, too_many_images)
     .required(required_image),
   post: boolean(),
-  rooms: number().required(required).positive(positive).integer().typeError(required),
+  rooms: number().required(required).min(1, too_short).max(3, too_long).positive(positive).integer().typeError(required),
 });
 
 export const defaultValues = {

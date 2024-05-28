@@ -7,7 +7,7 @@ import { TelegramUser } from 'telegram-login-button';
 const secret = new TextEncoder().encode('Kazan2023!');
 
 export default async function loginTelegram(user: TelegramUser | User) {
-  console.log('USER', user);
+  // console.log('USER', user);
   try {
     const { id, username } = user;
     const upsertUser = await prisma.user.upsert({
@@ -26,7 +26,7 @@ export default async function loginTelegram(user: TelegramUser | User) {
       // },
     });
 
-    console.log('upsertUser', upsertUser);
+    // console.log('upsertUser', upsertUser);
 
     const token = await new jose.SignJWT({
       id,

@@ -1,5 +1,6 @@
 import PostPage from "@/components/PostPage";
 import Price from "@/components/Price";
+import ShareButton from '@/pages-lib/post/ShareButton';
 import {getAllCategories} from "@/prisma/services/categories";
 import buttonStyles from "@/styles/buttonStyles";
 import fetchAd from "@/utils/api/prisma/fetchAd";
@@ -7,9 +8,14 @@ import fetchAds from "@/utils/api/prisma/fetchAds";
 import {routes} from "@/utils/constants";
 import mapCategories from "@/utils/mapCategories";
 import clsx from "clsx";
+import dayjs from 'dayjs';
+import dynamic from 'next/dynamic';
 import Link from "next/link";
 import {notFound} from "next/navigation";
 import React from 'react';
+const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
+  ssr: false
+});
 
 interface AdPageProps {
   params: {
@@ -42,7 +48,7 @@ export default async function Post({params: {id}}: AdPageProps) {
     )
   }
 
-  const {price, description, rooms} = post
+  const {price, description, rooms, userId, longitude, latitude,createdAt} = post
 
   const properties = [
     {
@@ -65,7 +71,7 @@ export default async function Post({params: {id}}: AdPageProps) {
             <p className='p-1 text-right'>{value}</p>
           </li>)}
       </ul>
-      {/*<time className="mt-5">Опубликовано: {dayjs(createdAt).format('DD.MM.YYYY')}</time>*/}
+      <time className="mt-5">Опубликовано: {dayjs(createdAt).format('DD.MM.YYYY')}</time>
 
       <p>Позвонить автору</p>
       <a
@@ -77,11 +83,13 @@ export default async function Post({params: {id}}: AdPageProps) {
         123-456-7890
       </a>
 
-
-      {/*<Link href={routes.users + '/' + userId} className={clsx(buttonStyles(), 'mt-4 !block')}>*/}
-      {/*  Все объявления автора*/}
-      {/*</Link>*/}
-      {/*<ShareButton post={post}/>*/}
+      <Link href={routes.users + '/' + userId} className={clsx(buttonStyles(), 'mt-4 !block')}>
+        Все объявления автора
+      </Link>
+      <ShareButton post={post}/>
+      <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
+      <DynamicLeafletMap posts={[post]}  center={[Number(latitude), Number(longitude)]}/>
+      </div>
     </div>
 
   );

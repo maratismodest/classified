@@ -35,7 +35,7 @@ const SearchModule = () => {
     }
   }, [searchText]);
 
-  console.log('posts', posts);
+  // console.log('posts', posts);
 
   return (
     <section className="relative mt-1">

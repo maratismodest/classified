@@ -6,10 +6,9 @@ export function getAllPosts() {
 }
 
 export function createPost(formData: CreatePostDTO) {
-  // return prisma.post.create({
-  //   data: formData,
-  // });
-  return
+  return prisma.post.create({
+    data: formData,
+  });
 }
 
 export function updatePost(formData: Partial<EditPostDTO>) {

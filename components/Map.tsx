@@ -1,6 +1,7 @@
 "use client"
 
 import {Post} from "@prisma/client";
+import { LatLngExpression, LatLngTuple } from 'leaflet';
 import Image from 'next/image'
 
 import "leaflet/dist/leaflet.css";
@@ -13,7 +14,8 @@ import "leaflet-defaulticon-compatibility";
 interface MapProps {
   // posix: LatLngExpression | LatLngTuple,
   zoom?: number,
-  posts: Post[]
+  posts: Post[],
+  center?:LatLngExpression | LatLngTuple
 }
 
 const defaults = {
@@ -24,16 +26,14 @@ const Map = (Map: MapProps) => {
   const {
     zoom = defaults.zoom,
     // posix
-    posts
+    posts,
+    center
   } = Map
-  const handleMarkerClick = (data: any) => {
-    console.log('Marker clicked!', data);
-  };
 
   return (
     <>
       <MapContainer
-        center={[42.6977, 23.3219]}
+        center={center ?? [42.6977, 23.3219]}
         zoom={zoom}
         scrollWheelZoom={false}
         style={{height: "100%", width: "100%"}}

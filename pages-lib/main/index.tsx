@@ -1,10 +1,8 @@
 'use client'
-import AdvCard from "@/components/AdvCard";
-import {routes} from "@/utils/constants";
+import Posts from "@/components/Posts";
 import {Checkbox, Stack, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
 import {Post} from "@prisma/client";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import React, {useEffect, useState} from 'react';
 
 const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
@@ -22,7 +20,7 @@ const Main = ({posts}: { posts: Post[] }) => {
   useEffect(() => {
     setFiltered(prevState => rooms.length ? [...posts].filter(x => rooms.includes(x.rooms)) : posts)
   }, [rooms]);
-  console.log('rooms', rooms)
+  // console.log('rooms', rooms)
   return (
     <>
       <h1>Результат фильтра: {filtered.length}</h1>
@@ -75,11 +73,7 @@ const Main = ({posts}: { posts: Post[] }) => {
             </div>
           </TabPanel>
           <TabPanel className='!px-0'>
-            {filtered.map(x =>
-              <Link key={x.id} href={`${routes.post}/${x.id}`}>
-                <AdvCard post={x}/>
-              </Link>
-            )}
+            <Posts posts={filtered} />
           </TabPanel>
         </TabPanels>
       </Tabs>

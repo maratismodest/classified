@@ -1,9 +1,5 @@
 import prisma from '@/lib/prisma';
-import { Prisma, User } from '@prisma/client';
-
-// type UserWithBans = Prisma.UserGetPayload<{
-//   include: { bans: true };
-// }>;
+import { User } from '@prisma/client';
 
 export function getAllUsers(): Promise<User[]> {
   return prisma.user.findMany(
