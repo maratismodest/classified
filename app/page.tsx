@@ -2,6 +2,8 @@ import Main from "@/pages-lib/main";
 import fetchPosts from "@/utils/api/prisma/fetchAds";
 import React from "react";
 
+export const revalidate = 300;
+
 export default async function Home() {
 
   const posts = await fetchPosts({})
