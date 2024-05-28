@@ -1,4 +1,5 @@
 'use client';
+import AddMap from '@/components/AddMap';
 import { getCurrencySymbol } from '@/components/Price/utils';
 import SelectHeadlessUi from '@/components/SelectHeadlessUi';
 import Spinner from '@/components/ui/Spinner';
@@ -10,15 +11,22 @@ import imageHandler from '@/modules/PostModule/ImagesModule/utils';
 import { stateAtom } from '@/state';
 import buttonStyles from '@/styles/buttonStyles';
 import inputStyles from '@/styles/inputStyles';
-import { CreatePostDTO } from '@/types';
+import { Coordinates, CreatePostDTO } from '@/types';
 import postAd from '@/utils/api/prisma/postPost';
 import { Field, Label } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
-import React, { useState } from 'react';
+import { LatLng, LatLngTuple } from 'leaflet';
+import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { defaultValues, IFormInput, schema } from '../yup';
+
+const DynamicLeafletMap = dynamic(() => import('@/components/AddMap'), {
+  ssr: false,
+});
+
 
 interface PostModuleProps {
   onSubmitOptional?: () => Promise<void> | void;
@@ -30,6 +38,9 @@ export default function CreatePostModule({
   const isTelegram = useAtomValue(stateAtom);
   const { categories } = useApp();
   const { user, loading: userLoading } = useAuth();
+
+  const [clickedPosition, setClickedPosition] = useState<LatLng | null>(null);
+
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -52,9 +63,16 @@ export default function CreatePostModule({
 
   const images = useWatch({ name: 'images', control }) as string[];
 
+  useEffect(() => {
+    if (clickedPosition) {
+      setValue('latitude', String(clickedPosition.lat));
+      setValue('longitude', String(clickedPosition.lng));
+    }
+  }, [clickedPosition]);
   if (userLoading) {
     return <Spinner />;
   }
+
 
   if (!user) {
     return (
@@ -70,6 +88,10 @@ export default function CreatePostModule({
   // }
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
+    if (!clickedPosition) {
+      alert('Выберите местоположение на карте');
+      return;
+    }
     try {
       setLoading(true);
       const createPostDto: CreatePostDTO = {
@@ -81,14 +103,14 @@ export default function CreatePostModule({
         userId: user.id,
         published: Boolean(data.post),
         rooms: data.rooms,
-        latitude: '42.7000',
-        longitude: '23.3200',
+        latitude: data.latitude,
+        longitude: data.longitude,
       };
 
       const post = await postAd(createPostDto);
-      // console.log('post', post);
+      console.log('post', post);
       // reset();
-      // alert('Объявление создано!');
+      alert('Объявление создано!');
       // await onSubmitOptional();
     } catch (e) {
       console.log(e);
@@ -107,7 +129,9 @@ export default function CreatePostModule({
           <SelectHeadlessUi options={categories} name="categoryId" />
           <span className="text-red">{errors.categoryId?.message}</span>
         </Field>
-
+        <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
+          <DynamicLeafletMap clickedPosition={clickedPosition} setClickedPosition={setClickedPosition} />
+        </div>
         <div>
           <label>Цена ({getCurrencySymbol()})</label>
           <input

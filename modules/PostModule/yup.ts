@@ -20,6 +20,8 @@ export const schema = object({
     .required(required_image),
   post: boolean(),
   rooms: number().required(required).min(1, too_short).max(3, too_long).positive(positive).integer().typeError(required),
+  latitude: string().required(required),
+  longitude: string().required(required),
 });
 
 export const defaultValues = {

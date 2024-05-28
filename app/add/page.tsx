@@ -7,6 +7,7 @@ import { routes } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 import React, { useCallback } from 'react';
 
+
 export default function AddPage<NextPage>() {
   const { user, loading: userLoading } = useAuth();
   const router = useRouter();

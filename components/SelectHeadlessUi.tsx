@@ -38,7 +38,7 @@ export default function SelectHeadlessUi({ name, options }: { name: string; opti
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <ListboxOptions className="absolute top-10 z-50 w-full rounded bg-white p-2 drop-shadow-md">
+              <ListboxOptions className="absolute top-10 z-[9999] w-full rounded bg-white p-2 drop-shadow-md">
                 {options.map(category => (
                   <ListboxOption key={category.value} value={category} as={Fragment}>
                     {({ active, selected }) => (

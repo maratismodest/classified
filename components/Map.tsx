@@ -11,7 +11,6 @@ import Link from "next/link";
 import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet-defaulticon-compatibility";
 
-
 interface MapProps {
   // posix: LatLngExpression | LatLngTuple,
   zoom?: number,

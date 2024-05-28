@@ -11,6 +11,8 @@ export type Methods = UseFormReturn<{
   description: string;
   images: (string | undefined)[];
   rooms: number;
+  latitude: string;
+  longitude: string;
 }>;
 
 const imageHandler = async (
