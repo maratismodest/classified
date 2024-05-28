@@ -18,7 +18,7 @@ export type Methods = UseFormReturn<{
 const imageHandler = async (
   files: FileList | null,
   images: string[],
-  methods: Methods,
+  methods: any,
   setLoading: (a: boolean) => void
 ) => {
   const { setValue, trigger } = methods;

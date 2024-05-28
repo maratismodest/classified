@@ -1,6 +1,6 @@
-import {LatLngExpression, LatLngTuple} from "leaflet";
+import { LatLngExpression, LatLngTuple } from 'leaflet';
 
-export type Coordinates = LatLngExpression | LatLngTuple
+export type Coordinates = LatLngExpression | LatLngTuple;
 
 export interface Seo {
   title: string;
@@ -29,10 +29,11 @@ export interface CreatePostDTO {
   categoryId: number;
   published: boolean;
   rooms: number;
-  latitude:string;
-  longitude:string;
+  latitude: string;
+  longitude: string;
+  furnished: boolean;
+  meters: number;
 }
-
 
 export interface EditPostDTO {
   readonly id: number;
@@ -43,7 +44,7 @@ export interface EditPostDTO {
   images: string;
   categoryId: number;
   published?: boolean;
-  rooms?: number
+  rooms?: number;
 }
 
 export interface CategoryDTO {
@@ -104,7 +105,7 @@ export interface IWebApp {
     isVisible: boolean;
     isProgressVisible: boolean;
     isActive: boolean;
-    setParams: ({text}: { text: string }) => void;
+    setParams: ({ text }: { text: string }) => void;
     show: () => void;
     hide: () => void;
   };

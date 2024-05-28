@@ -8,7 +8,7 @@ import { Methods } from './utils';
 interface AddImageInputProps {
   images: string[];
   imageHandler: (files: FileList | null) => void;
-  methods: Methods;
+  methods: any;
 }
 const ImagesModuleInput = ({ images, imageHandler, methods }: AddImageInputProps) => {
   const ref = useRef<HTMLInputElement>(null);

@@ -8,12 +8,16 @@ export interface GetPostsParams {
   userId: string;
   categoryId: number;
   published: boolean;
-  search?: string;
+  search: string;
+  furnished: boolean;
+  rooms: number[];
+  min: number;
+  max: number;
 }
 
 export default async function fetchPosts(params: Partial<GetPostsParams>): Promise<Post[]> {
-  const { size = 20, page = 0, categoryId, userId, published } = params;
-
+  const { size = 20, page = 0, categoryId, userId, published, furnished, rooms, min, max } = params;
+  console.log('furnished furnished', furnished);
   const posts = await prisma.post.findMany({
     skip: size * page,
     take: params.size,
@@ -21,8 +25,16 @@ export default async function fetchPosts(params: Partial<GetPostsParams>): Promi
       categoryId,
       userId,
       published,
+      furnished,
       description: {
         search: params.search && params.search + ':*',
+      },
+      rooms: rooms && {
+        in: rooms,
+      },
+      price: {
+        gte: min,
+        lte: max,
       },
     },
     orderBy: {

@@ -19,10 +19,32 @@ export const schema = object({
     .max(4, too_many_images)
     .required(required_image),
   post: boolean(),
-  rooms: number().required(required).min(1, too_short).max(3, too_long).positive(positive).integer().typeError(required),
+  rooms: number()
+    .required(required)
+    .min(1, too_short)
+    .max(3, too_long)
+    .positive(positive)
+    .integer()
+    .typeError(required),
   latitude: string().required(required),
   longitude: string().required(required),
+  furnished: boolean().default(false),
+  meters: number().required(required).positive(positive).integer().typeError(required),
 });
+
+export const searchSchema = object({
+  rooms: array().of(number()).default([]),
+  furnished: string().default('undefined'),
+  min: number().default(0),
+  max: number().default(0),
+});
+
+export const defaultSearchValues = {
+  rooms: [],
+  furnished: 'undefined',
+  min: 0,
+  max: 0,
+};
 
 export const defaultValues = {
   categoryId: undefined,
@@ -32,6 +54,12 @@ export const defaultValues = {
   agreement: true,
   post: true,
   rooms: undefined,
+  furnished: false,
+  meters: undefined,
+  latitude: undefined,
+  longitude: undefined,
 };
+
+export type ISearchFormInput = InferType<typeof searchSchema>;
 
 export type IFormInput = InferType<typeof schema>;

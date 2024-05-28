@@ -1,3 +1,4 @@
+import { CreatePostDTO } from '@/types';
 import { Article, Category, Post, PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -14,30 +15,6 @@ const initialCategories: Category[] = [
     name: 'buy',
     label: 'Куплю',
     image: 'https://chamala.tatar/uploads/buy.png',
-  },
-  {
-    id: 3,
-    name: 'services',
-    label: 'Услуги',
-    image: 'https://chamala.tatar/uploads/services.png',
-  },
-  {
-    id: 5,
-    name: 'estate',
-    label: 'Недвижимость',
-    image: 'https://chamala.tatar/uploads/estate.png',
-  },
-  {
-    id: 6,
-    name: 'clothes',
-    label: 'Одежда',
-    image: 'https://chamala.tatar/uploads/clothes.png',
-  },
-  {
-    id: 7,
-    name: 'free',
-    label: 'Даром',
-    image: 'https://chamala.tatar/uploads/free.png',
   },
 ];
 
@@ -143,51 +120,176 @@ const initialArticlesSofia: Article[] = [
   },
 ];
 
-const initialPosts: Post[] = [
+const initialPosts: CreatePostDTO[] = [
   {
-    id: 1,
-    latitude: '42.6936554',
-    longitude: '23.3119826',
-    price: 100000,
+    // id: 1,
+    latitude: '42.69833273089854',
+    longitude: '23.31327574081007',
+    price: 860384,
     preview: '/images/1/1.jpg',
-    description: 'Однушка в центре города',
+    description: '2 комнатная квартира',
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 1,
-    categoryId: 1,
-    createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: false,
-    userId: '71233480',
-  },
-  {
-    id: 2,
-    latitude: '42.6900000',
-    longitude: '23.3100000',
-    price: 200000,
-    preview: '/images/2/1.jpg',
-    description: 'Двушка в центре города',
-    images: '/images/2/1.jpg||/images/2/2.jpg||/images/2/3.jpg',
     rooms: 2,
     categoryId: 1,
-    createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: false,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
     userId: '71233480',
+    furnished: false,
+    meters: 53,
   },
   {
-    id: 3,
-    latitude: '42.6978028',
-    longitude: '23.3183634',
-    price: 300000,
+    // id: 2,
+    latitude: '42.69884944376986',
+    longitude: '23.321064918905655',
+    price: 429257,
     preview: '/images/1/1.jpg',
-    description: 'Трешка в центре города',
+    description: '2 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 2,
+    categoryId: 1,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: false,
+    meters: 74,
+  },
+  {
+    // id: 3,
+    latitude: '42.689411045620666',
+    longitude: '23.324950098525367',
+    price: 495059,
+    preview: '/images/1/1.jpg',
+    description: '1 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 1,
+    categoryId: 2,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: false,
+    meters: 20,
+  },
+  {
+    // id: 4,
+    latitude: '42.697818225738715',
+    longitude: '23.322031994605958',
+    price: 391718,
+    preview: '/images/1/1.jpg',
+    description: '3 комнатная квартира',
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 1,
-    createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: false,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
     userId: '71233480',
+    furnished: true,
+    meters: 94,
+  },
+  {
+    // id: 5,
+    latitude: '42.704634767807605',
+    longitude: '23.327599318954764',
+    price: 464823,
+    preview: '/images/1/1.jpg',
+    description: '3 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 3,
+    categoryId: 2,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: true,
+    meters: 89,
+  },
+  {
+    // id: 6,
+    latitude: '42.702853957931005',
+    longitude: '23.319621537427807',
+    price: 550163,
+    preview: '/images/1/1.jpg',
+    description: '1 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 1,
+    categoryId: 2,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: true,
+    meters: 3,
+  },
+  {
+    // id: 7,
+    latitude: '42.701731724507134',
+    longitude: '23.31801677384061',
+    price: 827423,
+    preview: '/images/1/1.jpg',
+    description: '1 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 1,
+    categoryId: 2,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: false,
+    meters: 24,
+  },
+  {
+    // id: 8,
+    latitude: '42.69779503738465',
+    longitude: '23.322682300818244',
+    price: 805864,
+    preview: '/images/1/1.jpg',
+    description: '3 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 3,
+    categoryId: 2,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: true,
+    meters: 39,
+  },
+  {
+    // id: 9,
+    latitude: '42.69030618054631',
+    longitude: '23.32666103735413',
+    price: 718156,
+    preview: '/images/1/1.jpg',
+    description: '3 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 3,
+    categoryId: 1,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: false,
+    meters: 67,
+  },
+  {
+    // id: 10,
+    latitude: '42.704343756615806',
+    longitude: '23.325421456923312',
+    price: 333931,
+    preview: '/images/1/1.jpg',
+    description: '3 комнатная квартира',
+    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
+    rooms: 3,
+    categoryId: 1,
+    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+    published: true,
+    userId: '71233480',
+    furnished: true,
+    meters: 8,
   },
 ];
 
@@ -201,40 +303,35 @@ const initialUsers: User[] = [
   },
 ];
 
+const seedArticles = async () => {
+  await prisma.article.deleteMany();
+
+  for (const article of initialArticlesSofia) {
+    await prisma.article.create({
+      data: article,
+    });
+  }
+};
+
 const seed = async () => {
+  await seedArticles();
 
-  // await prisma.user.deleteMany();
-  //
-  // for (const user of initialUsers) {
-  //   await prisma.category.create({
-  //     data: user,
-  //   });
-  // }
-
-  // await prisma.category.deleteMany();
-
-  // for (const category of initialCategories) {
-  //   await prisma.category.create({
-  //     data: category,
-  //   });
-  // }
-
-  // await prisma.article.deleteMany();
-  //
-  // for (const article of initialArticlesSofia) {
-  //   await prisma.article.create({
-  //     data: article,
-  //   });
-  // }
-
-  // await prisma.user.deleteMany();
-  // for (const user of initialUsers) {
-  //   await prisma.user.create({
-  //     data: user,
-  //   });
-  // }
-  //
   await prisma.post.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
+
+  for (const user of initialUsers) {
+    await prisma.user.create({
+      data: user,
+    });
+  }
+
+  for (const category of initialCategories) {
+    await prisma.category.create({
+      data: category,
+    });
+  }
+
   for (const post of initialPosts) {
     await prisma.post.create({
       data: post,

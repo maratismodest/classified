@@ -7,10 +7,16 @@ export interface GetPostsParams {
   userId: string;
   categoryId: number;
   published: boolean;
-  search?: string;
+  search: string;
+  furnished: boolean;
+  rooms: number[];
+  min: number;
+  max: number;
 }
 
 export default async function fetchApiPosts(params: Partial<GetPostsParams>) {
-  const { data } = await clientPrisma.get<Post[]>(beRoutes.posts, { params });
+  const { data } = await clientPrisma.get<Post[]>(beRoutes.posts, {
+    params: { ...params, rooms: JSON.stringify(params.rooms) },
+  });
   return data;
 }

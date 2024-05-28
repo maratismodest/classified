@@ -1,5 +1,4 @@
 'use client';
-import AddMap from '@/components/AddMap';
 import { getCurrencySymbol } from '@/components/Price/utils';
 import SelectHeadlessUi from '@/components/SelectHeadlessUi';
 import Spinner from '@/components/ui/Spinner';
@@ -11,13 +10,13 @@ import imageHandler from '@/modules/PostModule/ImagesModule/utils';
 import { stateAtom } from '@/state';
 import buttonStyles from '@/styles/buttonStyles';
 import inputStyles from '@/styles/inputStyles';
-import { Coordinates, CreatePostDTO } from '@/types';
+import { CreatePostDTO } from '@/types';
 import postAd from '@/utils/api/prisma/postPost';
 import { Field, Label } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
-import { LatLng, LatLngTuple } from 'leaflet';
+import { LatLng } from 'leaflet';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form';
@@ -27,20 +26,12 @@ const DynamicLeafletMap = dynamic(() => import('@/components/AddMap'), {
   ssr: false,
 });
 
-
-interface PostModuleProps {
-  onSubmitOptional?: () => Promise<void> | void;
-}
-
-export default function CreatePostModule({
-                                           onSubmitOptional = async () => undefined,
-                                         }: PostModuleProps) {
+export default function CreatePostModule() {
   const isTelegram = useAtomValue(stateAtom);
   const { categories } = useApp();
   const { user, loading: userLoading } = useAuth();
 
   const [clickedPosition, setClickedPosition] = useState<LatLng | null>(null);
-
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -55,12 +46,14 @@ export default function CreatePostModule({
     setValue,
     trigger,
     control,
+    watch,
   } = methods;
 
   console.log('errors', errors);
 
   const [loading, setLoading] = useState(false);
-
+  const latitude = watch('latitude');
+  const longitude = watch('longitude');
   const images = useWatch({ name: 'images', control }) as string[];
 
   useEffect(() => {
@@ -69,10 +62,12 @@ export default function CreatePostModule({
       setValue('longitude', String(clickedPosition.lng));
     }
   }, [clickedPosition]);
+
+  console.log('');
+
   if (userLoading) {
     return <Spinner />;
   }
-
 
   if (!user) {
     return (
@@ -83,15 +78,7 @@ export default function CreatePostModule({
     );
   }
 
-  // if (user.bans.length > 0) {
-  //   return <div>Ваш аккаут заблокирован!</div>;
-  // }
-
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
-    if (!clickedPosition) {
-      alert('Выберите местоположение на карте');
-      return;
-    }
     try {
       setLoading(true);
       const createPostDto: CreatePostDTO = {
@@ -105,6 +92,8 @@ export default function CreatePostModule({
         rooms: data.rooms,
         latitude: data.latitude,
         longitude: data.longitude,
+        furnished: data.furnished,
+        meters: data.meters,
       };
 
       const post = await postAd(createPostDto);
@@ -124,13 +113,22 @@ export default function CreatePostModule({
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="form gap-2">
         <h1>Новое объявление{isTelegram === 1 ? '.' : '!'}</h1>
-        <Field>
-          <Label>Выберите категорию</Label>
+        <div className="bg-white-700 mx-auto my-5 h-[400px] w-full">
+          <DynamicLeafletMap
+            clickedPosition={clickedPosition}
+            setClickedPosition={setClickedPosition}
+          />
+          <input hidden {...register('longitude')} />
+          <input hidden {...register('latitude')} />
+          <span className="text-red">
+            {!longitude && errors.longitude?.message && !latitude && errors.latitude?.message}
+          </span>
+        </div>
+
+        <div>
+          <label htmlFor="categoryId">Выберите категорию</label>
           <SelectHeadlessUi options={categories} name="categoryId" />
           <span className="text-red">{errors.categoryId?.message}</span>
-        </Field>
-        <div className="bg-white-700 mx-auto my-5 w-full h-[480px]">
-          <DynamicLeafletMap clickedPosition={clickedPosition} setClickedPosition={setClickedPosition} />
         </div>
         <div>
           <label>Цена ({getCurrencySymbol()})</label>
@@ -142,27 +140,47 @@ export default function CreatePostModule({
           <span className="text-red">{errors.price?.message}</span>
         </div>
 
-        {/*<div>*/}
-        {/*  <label htmlFor="title">Заголовок</label>*/}
-        {/*  <input {...register('title')} className={clsx(inputStyles(), 'block w-full')}/>*/}
-        {/*  <span className="text-red">{errors.title?.message}</span>*/}
-        {/*</div>*/}
-
         <div>
           <label htmlFor="description">Описание</label>
-          <textarea rows={5} cols={5} {...register('description')} name="description" className="w-full" />
+          <textarea
+            rows={5}
+            cols={5}
+            {...register('description')}
+            name="description"
+            className="w-full"
+          />
           <span className="text-red">{errors.description?.message}</span>
         </div>
 
-        <Field>
-          <Label>Количество комнат</Label>
+        <div>
+          <label htmlFor="rooms">Количество комнат</label>
           <input
+            id="rooms"
             type="number"
             {...register('rooms')}
             className={clsx(inputStyles(), 'block w-full')}
           />
           <span className="text-red">{errors.rooms?.message}</span>
-        </Field>
+        </div>
+
+        <div>
+          <label htmlFor="meters">Площадь</label>
+          <input
+            id="meters"
+            type="number"
+            {...register('meters')}
+            className={clsx(inputStyles(), 'block w-full')}
+          />
+          <span className="text-red">{errors.meters?.message}</span>
+        </div>
+
+        <div>
+          <div className="flex items-center gap-4">
+            <label htmlFor="furnished">Мебелированная</label>
+            <input id="furnished" type="checkbox" {...register('furnished')} />
+          </div>
+          <span className="text-red">{errors.furnished?.message}</span>
+        </div>
 
         <ImagesModuleInput
           images={images}
