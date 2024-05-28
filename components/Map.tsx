@@ -1,5 +1,6 @@
 "use client"
 
+import { routes } from '@/utils/constants';
 import {Post} from "@prisma/client";
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 import Image from 'next/image'
@@ -53,7 +54,7 @@ const Map = (Map: MapProps) => {
               }}
             >
               <Popup>
-                <Link href={`/adv/${post.id}`} className='flex gap-2'>
+                <Link href={`${routes.post}/${post.id}`} className='flex gap-2'>
                   <div className='aspect-square w-24 h-24 relative'>
                     <Image src={post.preview} fill alt='' style={{objectFit: 'cover'}}/>
                   </div>
