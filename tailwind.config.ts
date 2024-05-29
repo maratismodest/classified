@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -12,12 +12,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)"],
-        mono: ["var(--font-geist-mono)"],
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
       },
     },
     colors: {
@@ -37,6 +37,6 @@ const config: Config = {
       inputBorder: 'hsl(0deg 0% 80%)',
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-displaymodes')],
 };
 export default config;

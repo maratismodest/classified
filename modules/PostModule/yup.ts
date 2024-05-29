@@ -35,14 +35,14 @@ export const schema = object({
 
 export const searchSchema = object({
   rooms: array().of(number()).default([]),
-  furnished: string().default('undefined'),
+  furnished: boolean().default(undefined),
   min: number().default(0),
   max: number().default(0),
 });
 
 export const defaultSearchValues = {
   rooms: [],
-  furnished: 'undefined',
+  furnished: undefined,
   min: 0,
   max: 0,
 };

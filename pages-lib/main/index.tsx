@@ -17,12 +17,12 @@ import {
   TabPanels,
   Tabs,
 } from '@chakra-ui/react';
-import { min } from '@floating-ui/utils';
+import { Checkbox, Select } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import React, { useMemo } from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 const furnishedOptions = [
   {
@@ -65,11 +65,13 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
   const _max = watch('max');
   const _furnished = watch('furnished');
 
+  console.log('_furnished', _furnished);
+
   const options = useMemo(
     () =>
       cleanObject({
         published: true,
-        furnished: getBooleanUndefinded(_furnished),
+        furnished: _furnished,
         rooms: _rooms.length > 0 ? _rooms : undefined,
         min: _min,
         max: _max,
@@ -97,31 +99,43 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
       <h1>Результат фильтра: {posts?.length}</h1>
       <FormProvider {...methods}>
         <form className="border p-2" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-            <div className="grid grid-cols-1 gap-1">
+          <div className="grid grid-cols-1 items-start gap-2 md:grid-cols-4">
+            <div className="grid grid-cols-1">
               <label htmlFor="furnished">мебель</label>
-              <select
-                id="furnished"
-                {...register('furnished')}
-                className="w-fit rounded border p-1"
-              >
-                {furnishedOptions.map(x => (
-                  <option key={x.label} value={x.value}>
-                    {x.label}
-                  </option>
-                ))}
-              </select>
+              <Controller
+                control={control}
+                name="furnished"
+                render={() => (
+                  <Select
+                    className={clsx(
+                      'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1.5 text-sm/6',
+                      'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
+                      // Make the text of each option black on Windows
+                      '*:text-black'
+                    )}
+                    onChange={e => setValue('furnished', getBooleanUndefinded(e.target.value))}
+                  >
+                    {furnishedOptions.map(x => (
+                      <option key={x.label} value={x.value}>
+                        {x.label}
+                      </option>
+                    ))}
+                  </Select>
+                )}
+              />
+
               <span className="text-red">{errors.furnished?.message}</span>
             </div>
             <div>
               <label>кол-во комнат:</label>
-              <ul className="flex gap-4 ">
+              <ul className="flex gap-4">
                 {[1, 2, 3].map(number => (
                   <li key={number} className="flex items-center gap-1">
                     <label htmlFor={number.toString()}>{number}</label>
-                    <input
-                      type="checkbox"
+                    <Checkbox
+                      checked={Boolean(_rooms.includes(number))}
                       id={number.toString()}
+                      className="group block size-5 rounded border bg-white data-[checked]:bg-blue"
                       onChange={() =>
                         setValue(
                           'rooms',
@@ -130,7 +144,20 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
                             : _rooms?.concat([number])
                         )
                       }
-                    />
+                    >
+                      <svg
+                        className="stroke-white opacity-0 group-data-[checked]:opacity-100"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                      >
+                        <path
+                          d="M3 8L6 11L11 3.5"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </Checkbox>
                   </li>
                 ))}
               </ul>
@@ -138,6 +165,11 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
             </div>
 
             <div>
+              <div className="flex justify-between">
+                <span>{_min > 0 ? _min : minPrice}</span>
+                <label htmlFor="price">цена</label>
+                <span>{_max > 0 ? _max : maxPrice}</span>
+              </div>
               <RangeSlider
                 aria-label={['min', 'max']}
                 min={minPrice}
@@ -157,17 +189,12 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
                 <RangeSliderThumb index={0} />
                 <RangeSliderThumb index={1} />
               </RangeSlider>
-              <div className="flex justify-between">
-                <span>{_min > 0 ? _min : minPrice}</span>
-                <label htmlFor="price">цена</label>
-                <span>{_max > 0 ? _max : maxPrice}</span>
-              </div>
             </div>
-          </div>
-          <div className="relative flex justify-end">
-            <button type="submit" className={clsx(buttonStyles())}>
-              поиск
-            </button>
+            <div className="relative flex justify-end">
+              <button type="submit" className={clsx(buttonStyles({ size: 'medium' }))}>
+                поиск
+              </button>
+            </div>
           </div>
         </form>
       </FormProvider>
