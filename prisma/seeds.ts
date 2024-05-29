@@ -6,14 +6,14 @@ const prisma = new PrismaClient();
 const initialCategories: Category[] = [
   {
     id: 1,
-    name: 'sell',
-    label: 'Продам',
+    name: 'estate',
+    label: 'Продажа',
     image: 'https://chamala.tatar/uploads/sell.png',
   },
   {
     id: 2,
-    name: 'buy',
-    label: 'Куплю',
+    name: 'rent',
+    label: 'Аренда',
     image: 'https://chamala.tatar/uploads/buy.png',
   },
 ];
