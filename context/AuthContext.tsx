@@ -5,6 +5,7 @@ import loginTelegram from '@/utils/api/prisma/loginTelegram';
 import { User } from '@prisma/client';
 import * as jose from 'jose';
 import { useAtom } from 'jotai';
+import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -41,6 +42,8 @@ const decodeToken = async (token: string) => {
 };
 
 export default function AuthProvider({ children }: Props) {
+  const { data: session } = useSession();
+  console.log('SESSION', session);
   const [message, setMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
