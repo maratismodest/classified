@@ -39,7 +39,7 @@ const Map = (Map: MapProps) => {
   return (
     <>
       <MapContainer
-        key={new Date().getTime()}
+        key={process.env.NODE_ENV === 'development' ? new Date().getTime() : 'map-search'}
         center={center ?? [42.6977, 23.3219]}
         zoom={zoom}
         scrollWheelZoom={false}
