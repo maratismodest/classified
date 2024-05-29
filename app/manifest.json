@@ -1,8 +1,8 @@
 {
   "id": "1",
-  "name": "InnoAds",
-  "short_name": "InnoAds",
-  "description": "Доска объявлений города Иннополис",
+  "name": "Sofia Realty",
+  "short_name": "Sofia Realty",
+  "description": "Недвижимость в Софии",
   "theme_color": "#000000",
   "background_color": "#FFFFFF",
   "display": "standalone",
