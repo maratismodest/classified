@@ -1,7 +1,10 @@
-import { TelegramUser } from 'telegram-login-button';
+// import { TelegramUser } from 'telegram-login-button';
 import client, { beRoutes } from '../createRequest';
 
-export default async function loginTelegram(user: TelegramUser) {
+export default async function loginTelegram(
+  user: // TelegramUser
+  any
+) {
   try {
     const {
       data: { token },
