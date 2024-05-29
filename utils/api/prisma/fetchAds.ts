@@ -17,7 +17,7 @@ export interface GetPostsParams {
 
 export default async function fetchPosts(params: Partial<GetPostsParams>): Promise<Post[]> {
   const { size = 20, page = 0, categoryId, userId, published, furnished, rooms, min, max } = params;
-  console.log('furnished furnished', furnished);
+
   const posts = await prisma.post.findMany({
     skip: size * page,
     take: params.size,

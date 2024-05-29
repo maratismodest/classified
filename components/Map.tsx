@@ -8,6 +8,7 @@ import Image from 'next/image';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet-defaulticon-compatibility';
 
@@ -29,9 +30,16 @@ const Map = (Map: MapProps) => {
     center,
   } = Map;
 
+  useEffect(() => {
+    return () => {
+      console.log('unmount');
+    };
+  }, []);
+
   return (
     <>
       <MapContainer
+        key={new Date().getTime()}
         center={center ?? [42.6977, 23.3219]}
         zoom={zoom}
         scrollWheelZoom={false}
