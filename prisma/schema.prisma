@@ -50,6 +50,7 @@ model Post {
 
   latitude  String  @db.VarChar(255)
   longitude String  @db.VarChar(255)
+  address   String? @default("Sofia")
   rooms     Int
   furnished Boolean
   meters    Int

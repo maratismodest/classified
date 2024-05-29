@@ -10,17 +10,23 @@ const defaults = {
   zoom: 15,
 };
 
-const ClickableMap = ({ clickedPosition, setClickedPosition }: any) => {
-  console.log('clickedPosition', clickedPosition);
-  useEffect(() => {
-    if (clickedPosition) {
-      getAddressFromCoordinates(clickedPosition.lat, clickedPosition.lng);
-    }
-  }, [clickedPosition]);
+interface Props {
+  setValue: (key: any, value: any) => void;
+  longitude: number;
+  latitude: number;
+  address: string;
+}
+
+const ClickableMap = ({ setValue, latitude, longitude, address }: Props) => {
   const MapClickHandler = () => {
     useMapEvents({
       click: e => {
-        setClickedPosition(e.latlng);
+        setValue('latitude', e.latlng.lat);
+        setValue('longitude', e.latlng.lng);
+        getAddressFromCoordinates(e.latlng.lat, e.latlng.lng).then(address => {
+          console.log('address', address);
+          setValue('address', address);
+        });
       },
     });
 
@@ -39,9 +45,9 @@ const ClickableMap = ({ clickedPosition, setClickedPosition }: any) => {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
       <MapClickHandler />
-      {clickedPosition && (
+      {latitude && longitude && (
         <Marker
-          position={[Number(clickedPosition.lat), Number(clickedPosition.lng)]}
+          position={[latitude, longitude]}
           draggable={false}
           eventHandlers={{
             click: event => event.target.openPopup(),
@@ -49,8 +55,9 @@ const ClickableMap = ({ clickedPosition, setClickedPosition }: any) => {
         >
           <Popup>
             <p>Clicked Position:</p>
-            <p>Latitude: {clickedPosition.lat}</p>
-            <p>Longitude: {clickedPosition.lng}</p>
+            <p>Latitude: {latitude}</p>
+            <p>Longitude: {longitude}</p>
+            <p>Address: {address}</p>
           </Popup>
         </Marker>
       )}

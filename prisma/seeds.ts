@@ -137,6 +137,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: false,
     meters: 53,
+    address: 'ул. Георгиевская, 10',
   },
   {
     // id: 2,
@@ -154,6 +155,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: false,
     meters: 74,
+    address: 'ул. Георгиевская, 12',
   },
   {
     // id: 3,
@@ -171,6 +173,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: false,
     meters: 20,
+    address: 'ул. Георгиевская, 16',
   },
   {
     // id: 4,
@@ -188,6 +191,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: true,
     meters: 94,
+    address: 'ул. Георгиевская, 18',
   },
   {
     // id: 5,
@@ -205,6 +209,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: true,
     meters: 89,
+    address: 'ул. Георгиевская, 20',
   },
   {
     // id: 6,
@@ -222,6 +227,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: true,
     meters: 3,
+    address: 'ул. Георгиевская, 30',
   },
   {
     // id: 7,
@@ -239,6 +245,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: false,
     meters: 24,
+    address: 'ул. Георгиевская, 40',
   },
   {
     // id: 8,
@@ -256,6 +263,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: true,
     meters: 39,
+    address: 'ул. Георгиевская, 60',
   },
   {
     // id: 9,
@@ -273,6 +281,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: false,
     meters: 67,
+    address: 'ул. Георгиевская, 70',
   },
   {
     // id: 10,
@@ -290,6 +299,7 @@ const initialPosts: CreatePostDTO[] = [
     userId: 24,
     furnished: true,
     meters: 8,
+    address: 'ул. Георгиевская, 90',
   },
 ];
 

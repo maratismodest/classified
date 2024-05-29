@@ -26,10 +26,11 @@ export const schema = object({
     .positive(positive)
     .integer()
     .typeError(required),
-  latitude: string().required(required),
-  longitude: string().required(required),
   furnished: boolean().default(false),
   meters: number().required(required).positive(positive).integer().typeError(required),
+  latitude: string().required(required),
+  longitude: string().required(required),
+  address: string().required(required),
 });
 
 export const searchSchema = object({
@@ -58,6 +59,7 @@ export const defaultValues = {
   meters: undefined,
   latitude: undefined,
   longitude: undefined,
+  address: undefined,
 };
 
 export type ISearchFormInput = InferType<typeof searchSchema>;

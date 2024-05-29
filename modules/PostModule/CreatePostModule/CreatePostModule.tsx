@@ -11,11 +11,12 @@ import buttonStyles from '@/styles/buttonStyles';
 import inputStyles from '@/styles/inputStyles';
 import { CreatePostDTO } from '@/types';
 import postAd from '@/utils/api/prisma/postPost';
+import { routes } from '@/utils/constants';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
-import { LatLng } from 'leaflet';
 import dynamic from 'next/dynamic';
-import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { defaultValues, IFormInput, schema } from '../yup';
 
@@ -25,9 +26,8 @@ const DynamicLeafletMap = dynamic(() => import('@/components/AddMap'), {
 
 export default function CreatePostModule() {
   const { categories } = useApp();
+  const router = useRouter();
   const { user, loading: userLoading } = useAuth();
-
-  const [clickedPosition, setClickedPosition] = useState<LatLng | null>(null);
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -50,16 +50,8 @@ export default function CreatePostModule() {
   const [loading, setLoading] = useState(false);
   const latitude = watch('latitude');
   const longitude = watch('longitude');
+  const address = watch('address');
   const images = useWatch({ name: 'images', control }) as string[];
-
-  useEffect(() => {
-    if (clickedPosition) {
-      setValue('latitude', String(clickedPosition.lat));
-      setValue('longitude', String(clickedPosition.lng));
-    }
-  }, [clickedPosition]);
-
-  console.log('');
 
   if (userLoading) {
     return <Spinner />;
@@ -90,13 +82,17 @@ export default function CreatePostModule() {
         longitude: data.longitude,
         furnished: data.furnished,
         meters: data.meters,
+        address: data.address,
       };
+      console.log('createPostDto', createPostDto);
+      // return;
 
       const post = await postAd(createPostDto);
       console.log('post', post);
-      // reset();
+      reset();
       alert('Объявление создано!');
       // await onSubmitOptional();
+      router.push(routes.profile);
     } catch (e) {
       console.log(e);
       alert('Что-то пошло не так');
@@ -109,13 +105,18 @@ export default function CreatePostModule() {
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="form gap-2">
         <h1>Новое объявление</h1>
-        <div className="bg-white-700 mx-auto my-5 h-[400px] w-full">
-          <DynamicLeafletMap
-            clickedPosition={clickedPosition}
-            setClickedPosition={setClickedPosition}
-          />
-          <input hidden {...register('longitude')} />
-          <input hidden {...register('latitude')} />
+        <div>
+          <div className="bg-white-700 mx-auto h-[400px] w-full">
+            <DynamicLeafletMap
+              setValue={setValue}
+              longitude={Number(longitude)}
+              latitude={Number(latitude)}
+              address={address}
+            />
+            <input hidden {...register('longitude')} />
+            <input hidden {...register('latitude')} />
+          </div>
+          <span>Адрес: {address}</span>
           <span className="text-red">
             {!longitude && errors.longitude?.message && !latitude && errors.latitude?.message}
           </span>

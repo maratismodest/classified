@@ -4,12 +4,12 @@ import TransparentHeart from '@/assets/svg/heart.svg';
 import ItemButtons from '@/components/Item/item-buttons';
 import Price from '@/components/Price';
 import Popup from '@/components/ui/Popup';
-import useApp from '@/hooks/useApp';
 import useAuth from '@/hooks/useAuth';
 import useToast from '@/hooks/useToast';
 import favouritesAtom from '@/state';
+import updatePostPrisma from '@/utils/api/prisma/updatePost';
 import { NO_IMAGE, routes } from '@/utils/constants';
-import { Post, User } from '@prisma/client';
+import { Post } from '@prisma/client';
 import { useAtom } from 'jotai';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,11 +23,10 @@ type ItemProps = {
 };
 
 export default function Item({ post, edit = false }: ItemProps) {
-  const { categories } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const [modalText, setModalText] = useState<ItemModalText | undefined>();
-  const { toast, setToast } = useToast();
+  const { setToast } = useToast();
   const [favourites, setFavourites] = useAtom(favouritesAtom);
   const { user } = useAuth();
   const { id, preview, price, categoryId, description, images } = post;
@@ -53,15 +52,10 @@ export default function Item({ post, edit = false }: ItemProps) {
         return;
       }
       if (modalText === ItemModalText.delete) {
-        // await deleteAd(id);
-
-        // const _updatedPost = await updatePostPrisma({ ...post, published: false });
-        // console.log('_updatedPost', _updatedPost);
+        await updatePostPrisma({ ...post, published: false });
         setToast(true);
-        // revalidatePath('/profile');
         const refetchButton = document.getElementById('refetch-posts');
         if (refetchButton) {
-          console.log('refetchButton', refetchButton);
           refetchButton.click();
         }
         alert(success.archive);

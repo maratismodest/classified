@@ -49,10 +49,24 @@ export default async function Post({ params: { id } }: AdPageProps) {
     );
   }
 
-  const { price, description, rooms, userId, meters, longitude, latitude, createdAt, furnished } =
-    post;
+  const {
+    price,
+    description,
+    rooms,
+    userId,
+    meters,
+    longitude,
+    latitude,
+    createdAt,
+    furnished,
+    address,
+  } = post;
 
   const properties = [
+    // {
+    //   label: 'адрес',
+    //   value: address,
+    // },
     {
       label: 'количество комнат',
       value: rooms,
@@ -71,6 +85,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
       <PostPage post={post} />
       <h1>{rooms}-комнатная квартира</h1>
       <Price price={price} />
+      <p>Адрес: {address}</p>
       <hr />
       <p className="break-words">{description}</p>
 
@@ -78,7 +93,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
         {properties.map(({ value, label }) => (
           <li key={label} className="grid grid-cols-2 divide-x">
             <h5 className="p-1">{label}</h5>
-            <p className="p-1 text-right">{value}</p>
+            <p className="truncate p-1 text-right">{value}</p>
           </li>
         ))}
       </ul>

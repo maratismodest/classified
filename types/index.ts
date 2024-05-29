@@ -33,6 +33,7 @@ export interface CreatePostDTO {
   longitude: string;
   furnished: boolean;
   meters: number;
+  address: string;
 }
 
 export interface EditPostDTO {
