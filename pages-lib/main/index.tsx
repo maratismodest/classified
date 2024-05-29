@@ -5,6 +5,7 @@ import usePostsQuery from '@/hooks/query/usePostsQuery';
 import { defaultSearchValues, ISearchFormInput, searchSchema } from '@/modules/PostModule/yup';
 import { furnishedOptions } from '@/pages-lib/main/utils';
 import buttonStyles from '@/styles/buttonStyles';
+import { Option } from '@/types/global';
 import cleanObject from '@/utils/cleanObject';
 import getBooleanUndefinded from '@/utils/getBooleanOrUndefined';
 import {
@@ -37,8 +38,12 @@ import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-for
 const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
   ssr: false,
 });
-
-const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) => {
+interface Props {
+  minPrice: number;
+  maxPrice: number;
+  categories: { value: string; label: string }[];
+}
+const Main = ({ minPrice, maxPrice, categories }: Props) => {
   const methods = useForm<ISearchFormInput>({
     resolver: yupResolver(searchSchema),
     defaultValues: { ...defaultSearchValues, min: minPrice, max: maxPrice },
@@ -59,6 +64,7 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
   const _min = watch('min');
   const _max = watch('max');
   const _furnished = watch('furnished');
+  const _categoryId = watch('categoryId');
 
   const options = useMemo(
     () =>
@@ -68,9 +74,12 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
         rooms: _rooms.length > 0 ? _rooms : undefined,
         min: _min,
         max: _max,
+        categoryId: _categoryId,
       }),
-    [_furnished, _rooms, _min, _max]
+    [_furnished, _rooms, _min, _max, _categoryId]
   );
+
+  console.log('_categoryId', _categoryId);
 
   const { posts, postsLoading, postsRefetch, postsError } = usePostsQuery(options);
 
@@ -96,9 +105,41 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
           <FormProvider {...methods}>
             <Fieldset>
               <form
-                className="grid grid-cols-1 items-start gap-2 border px-4 py-2 md:grid-cols-4"
+                className="grid grid-cols-1 items-start gap-2 border px-4 py-2 md:grid-cols-5"
                 onSubmit={handleSubmit(onSubmit)}
               >
+                <Controller
+                  control={control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <Field>
+                      <label htmlFor={field.name}>категория</label>
+                      <Select
+                        id={field.name}
+                        className={clsx(
+                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1.5 text-sm/6',
+                          'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
+                          // Make the text of each option black on Windows
+                          '*:text-black'
+                        )}
+                        onChange={e => {
+                          setValue(
+                            'categoryId',
+                            e.target.value !== 'undefined' ? Number(e.target.value) : undefined
+                          );
+                        }}
+                      >
+                        {[{ value: 'undefined', label: 'все' }, ...categories].map(x => (
+                          <option key={x.label} value={x.value}>
+                            {x.label}
+                          </option>
+                        ))}
+                      </Select>
+                      <span className="text-red">{errors.furnished?.message}</span>
+                    </Field>
+                  )}
+                />
+
                 <Controller
                   control={control}
                   name="furnished"

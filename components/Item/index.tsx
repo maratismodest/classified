@@ -46,11 +46,6 @@ export default function Item({ post, edit = false }: ItemProps) {
         router.push(routes.edit + '/' + id);
         return;
       }
-      if (modalText === ItemModalText.telegram) {
-        alert(success.telegram);
-        router.push(routes.profile);
-        return;
-      }
       if (modalText === ItemModalText.delete) {
         await updatePostPrisma({ ...post, published: false });
         setToast(true);

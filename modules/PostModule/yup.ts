@@ -38,6 +38,7 @@ export const searchSchema = object({
   furnished: boolean().default(undefined),
   min: number().default(0),
   max: number().default(0),
+  categoryId: number().default(undefined),
 });
 
 export const defaultSearchValues = {
@@ -45,6 +46,7 @@ export const defaultSearchValues = {
   furnished: undefined,
   min: 0,
   max: 0,
+  categoryId: undefined,
 };
 
 export const defaultValues = {

@@ -1,7 +1,6 @@
 import Breadcrumbs, { Breadcrumb } from '@/components/Breadcrumbs';
 import { getAllArticles, getArticleBySlug } from '@/prisma/services/articles';
 import type { GetSlugPath } from '@/types';
-import { Option } from '@/types/global';
 import { routes } from '@/utils/constants';
 import { dateFormat } from '@/utils/date';
 import { getBlogPostJsonLd } from '@/utils/jsonLd';
@@ -37,7 +36,7 @@ export async function generateMetadata({
       url: `${process.env.NEXT_PUBLIC_APP_URL}/blog/${slug}`,
       siteName: process.env.NEXT_PUBLIC_APP_NAME,
       images: '/images/og-image.png',
-      locale: 'ru',
+      locale: 'bg',
     },
     alternates: {
       canonical: `${process.env.NEXT_PUBLIC_APP_URL}/blog/${slug}`,
