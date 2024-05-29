@@ -17,8 +17,10 @@ export default function ProfileNoUser() {
   const { login, user } = useAuth();
 
   useEffect(() => {
-    handleLogin();
-  }, [session]);
+    if (status === 'authenticated') {
+      handleLogin();
+    }
+  }, [status]);
 
   const handleLogin = async () => {
     try {

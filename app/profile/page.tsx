@@ -11,11 +11,13 @@ import { routes } from '@/utils/constants';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Post } from '@prisma/client';
 import { clsx } from 'clsx';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 
 export default function ProfilePage<NextPage>() {
   const { user, logout, loading } = useAuth();
+  const { data: session, status } = useSession();
   const userId = user?.id;
   const {
     posts = [],
@@ -26,7 +28,7 @@ export default function ProfilePage<NextPage>() {
 
   const archived: Post[] = useMemo(() => posts.filter(post => post.published === false), [posts]);
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return <Spinner />;
   }
 

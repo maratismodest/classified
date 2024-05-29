@@ -27,8 +27,9 @@ export default async function loginGoogle(googleUser: GoogleUser) {
     // console.log('upsertUser', upsertUser);
 
     const token = await new jose.SignJWT({
-      id: upsertUser.id,
       email: upsertUser.email,
+      name: upsertUser.name,
+      image: upsertUser.image,
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime(60 * 60 * 24 * 365 * 1000)

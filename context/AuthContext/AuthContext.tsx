@@ -40,6 +40,7 @@ export default function AuthProvider({ children }: Props) {
       if (token) {
         // пытаемся понять, валидный ли токен
         const decoded = await decodeToken(token);
+        console.log('decoded', decoded);
         // если токен валидный
         if (decoded) {
           // console.log('decoded', decoded);
