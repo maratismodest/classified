@@ -1,6 +1,5 @@
 'use client';
 
-import Price from '@/components/Price';
 import { routes } from '@/utils/constants';
 import { Post } from '@prisma/client';
 import { LatLngExpression, LatLngTuple } from 'leaflet';
@@ -13,7 +12,6 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import 'leaflet-defaulticon-compatibility';
 
 interface MapProps {
-  // posix: LatLngExpression | LatLngTuple,
   zoom?: number;
   posts: Post[];
   center?: LatLngExpression | LatLngTuple;

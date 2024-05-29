@@ -8,8 +8,8 @@ import ToastProvider from '@/context/ToastContext';
 import { Providers } from '@/providers/chakra-provider';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import './globals.css';
 import React, { Suspense } from 'react';
+import './globals.css';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

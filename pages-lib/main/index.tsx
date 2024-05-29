@@ -97,7 +97,7 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
       <h1>Результат фильтра: {posts?.length}</h1>
       <FormProvider {...methods}>
         <form className="border p-2" onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
             <div className="grid grid-cols-1 gap-1">
               <label htmlFor="furnished">мебель</label>
               <select
@@ -117,7 +117,7 @@ const Main = ({ minPrice, maxPrice }: { minPrice: number; maxPrice: number }) =>
               <label>кол-во комнат:</label>
               <ul className="flex gap-4 ">
                 {[1, 2, 3].map(number => (
-                  <li key={number} className="flex gap-1">
+                  <li key={number} className="flex items-center gap-1">
                     <label htmlFor={number.toString()}>{number}</label>
                     <input
                       type="checkbox"
