@@ -2,16 +2,17 @@ import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
 
 export function getAllUsers(): Promise<User[]> {
-  return prisma.user.findMany(
+  return prisma.user
+    .findMany
     // { include: { bans: true } }
-  );
+    ();
 }
 
 export function loginUsers(): Promise<User[]> {
   return prisma.user.findMany();
 }
 
-export function getUserById(id: string) {
+export function getUserById(id: number) {
   try {
     return prisma.user.findUnique({
       where: {

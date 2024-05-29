@@ -1,10 +1,9 @@
 import Header from '@/components/Header/Header';
 import AppProvider from '@/context/AppContext';
-import AuthProvider from '@/context/AuthContext';
+import AuthProvider from '@/context/AuthContext/AuthContext';
 import ModalProvider from '@/context/ModalContext';
 import NextAuthProvider from '@/context/NextAuthContext';
 import QueryProvider from '@/context/QueryContext';
-import TelegramProvider from '@/context/TelegramContext';
 import ToastProvider from '@/context/ToastContext';
 import { Providers } from '@/providers/chakra-provider';
 import type { Metadata } from 'next';
@@ -37,22 +36,18 @@ export default function RootLayout({
         <Suspense>
           <QueryProvider>
             <Providers>
-              <TelegramProvider>
-                <NextAuthProvider>
-                  <AuthProvider>
-                    <AppProvider>
-                      <ModalProvider>
-                        <ToastProvider>
-                          {/*<FavouritesProvider>*/}
-                          <Header />
-
-                          <main>{children}</main>
-                        </ToastProvider>
-                      </ModalProvider>
-                    </AppProvider>
-                  </AuthProvider>
-                </NextAuthProvider>
-              </TelegramProvider>
+              <NextAuthProvider>
+                <AuthProvider>
+                  <AppProvider>
+                    <ModalProvider>
+                      <ToastProvider>
+                        <Header />
+                        <main>{children}</main>
+                      </ToastProvider>
+                    </ModalProvider>
+                  </AppProvider>
+                </AuthProvider>
+              </NextAuthProvider>
             </Providers>
           </QueryProvider>
         </Suspense>

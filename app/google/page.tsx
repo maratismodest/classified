@@ -1,9 +1,14 @@
 'use client';
 
+import Spinner from '@/components/ui/Spinner';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return <Spinner />;
+  }
 
   if (!session) {
     return (

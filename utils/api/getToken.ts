@@ -4,13 +4,13 @@ import * as jose from 'jose';
 
 const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET);
 
-export default async function getToken(user: Pick<User, 'id' | 'username'>) {
+export default async function getToken(user: Pick<User, 'id' | 'email'>) {
   try {
-    const { id, username } = user;
+    const { id, email } = user;
 
     const token = await new jose.SignJWT({
       id,
-      username,
+      email,
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime(60 * 60 * 24 * 365 * 1000)

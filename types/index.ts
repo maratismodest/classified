@@ -23,7 +23,7 @@ export interface GetSlugPath {
 export interface CreatePostDTO {
   description: string;
   price: number;
-  userId: string;
+  userId: number;
   preview: string;
   images: string;
   categoryId: number;
@@ -39,7 +39,7 @@ export interface EditPostDTO {
   readonly id: number;
   description: string;
   price: number;
-  readonly userId: string;
+  readonly userId: number;
   preview: string;
   images: string;
   categoryId: number;

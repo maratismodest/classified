@@ -6,20 +6,17 @@ import Spinner from '@/components/ui/Spinner';
 import usePostsQuery from '@/hooks/query/usePostsQuery';
 import useAuth from '@/hooks/useAuth';
 import ProfileNoUser from '@/pages-lib/profile/ProfileNoUser';
-import { stateAtom } from '@/state';
 import buttonStyles from '@/styles/buttonStyles';
 import { routes } from '@/utils/constants';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Post } from '@prisma/client';
 import { clsx } from 'clsx';
-import { useAtomValue } from 'jotai';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 
 export default function ProfilePage<NextPage>() {
   const { user, logout, loading } = useAuth();
   const userId = user?.id;
-  const isTelegram = useAtomValue(stateAtom);
   const {
     posts = [],
     postsLoading,
@@ -63,7 +60,7 @@ export default function ProfilePage<NextPage>() {
         <h1>Профиль</h1>
         <p>Добавить объявление</p>
         <Link
-          href={isTelegram === 1 ? routes.bot : routes.add}
+          href={routes.add}
           className={clsx(
             buttonStyles({ size: 'medium' }),
             'flex h-12 w-full items-center justify-center !text-3xl'
@@ -97,7 +94,7 @@ export default function ProfilePage<NextPage>() {
         </>
       )}
       {!postsLoading && posts.length === 0 && <h2>Нет объявлений</h2>}
-      {isTelegram !== 1 && <Button onClick={logout}>Выход</Button>}
+      <Button onClick={logout}>Выход</Button>
     </div>
   );
 }

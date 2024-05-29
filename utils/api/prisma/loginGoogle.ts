@@ -1,36 +1,34 @@
 'use server';
 import prisma from '@/lib/prisma';
-import { User } from '@prisma/client';
+import { GoogleUser } from '@/pages-lib/profile/ProfileNoUser';
 import * as jose from 'jose';
-import { TelegramUser } from 'telegram-login-button';
 
 const secret = new TextEncoder().encode('Kazan2023!');
 
-export default async function loginTelegram(user: TelegramUser | User) {
-  // console.log('USER', user);
+export default async function loginGoogle(googleUser: GoogleUser) {
+  console.log('googleUser', googleUser);
   try {
-    const { id, username } = user;
+    const { email, name, image } = googleUser;
     const upsertUser = await prisma.user.upsert({
       where: {
-        id: String(id),
+        email: email,
       },
       update: {
-        username: username,
+        name: name,
+        image: image,
       },
       create: {
-        id: String(id),
-        username: username,
+        email,
+        name,
+        image,
       },
-      // include: {
-      //   bans: true,
-      // },
     });
 
     // console.log('upsertUser', upsertUser);
 
     const token = await new jose.SignJWT({
-      id,
-      username,
+      id: upsertUser.id,
+      email: upsertUser.email,
     })
       .setProtectedHeader({ alg: 'HS256' })
       .setExpirationTime(60 * 60 * 24 * 365 * 1000)

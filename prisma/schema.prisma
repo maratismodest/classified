@@ -15,6 +15,18 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  image     String?
+  posts     Post[]
+  // profile   Profile?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  role      Role     @default(USER)
+}
+
 model Post {
   id Int @id @default(autoincrement())
 
@@ -32,8 +44,9 @@ model Post {
   updatedAt DateTime @updatedAt
 
   published Boolean @default(false)
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 
   latitude  String  @db.VarChar(255)
   longitude String  @db.VarChar(255)
@@ -42,16 +55,6 @@ model Post {
   meters    Int
 
   @@index(userId)
-}
-
-model User {
-  id        String   @id @unique // not number cause telegram id is BigInteger, so we need parse/unparse
-  username  String   @unique
-  posts     Post[]
-  // profile   Profile?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      Role     @default(USER)
 }
 
 model Article {

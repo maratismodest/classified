@@ -12,7 +12,8 @@ import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import React from 'react';
+import React, { Suspense } from 'react';
+
 const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
   ssr: false,
 });
@@ -91,7 +92,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
       <Link href={routes.users + '/' + userId} className={clsx(buttonStyles(), 'mt-4 !block')}>
         Все объявления автора
       </Link>
-      <ShareButton post={post} />
+      {/*<ShareButton post={post} />*/}
       <div className="bg-white-700 mx-auto my-5 h-[240px] w-full">
         <DynamicLeafletMap posts={[post]} center={[Number(latitude), Number(longitude)]} />
       </div>

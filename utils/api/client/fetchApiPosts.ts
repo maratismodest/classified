@@ -4,7 +4,7 @@ import { Post } from '@prisma/client';
 export interface GetPostsParams {
   size: number;
   page: number;
-  userId: string;
+  userId: number;
   categoryId: number;
   published: boolean;
   search: string;

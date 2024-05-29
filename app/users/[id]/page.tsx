@@ -4,7 +4,7 @@ import buttonStyles from '@/styles/buttonStyles';
 import { GetIdPath } from '@/types';
 import fetchPosts from '@/utils/api/prisma/fetchAds';
 import fetchUsers from '@/utils/api/prisma/fetchUsers';
-import { tgLink } from '@/utils/constants';
+import { emailLink } from '@/utils/constants';
 import { getPersonJsonLd } from '@/utils/jsonLd';
 import clsx from 'clsx';
 import { Metadata } from 'next';
@@ -14,18 +14,19 @@ export async function generateStaticParams() {
   const users = await fetchUsers();
 
   return users.map(user => ({
-    id: user.id,
+    id: user.id.toString(),
   }));
 }
 
 export async function generateMetadata({ params: { id } }: GetIdPath): Promise<Metadata | null> {
-  const user = await getUserById(id);
+  const userId = Number(id);
+  const user = await getUserById(userId);
   if (!user) {
     return null;
   }
   return {
-    title: `Пользователь ${user.username}`,
-    description: `Пользователь ${user.id}`,
+    title: `Пользователь ${user.email}`,
+    description: `Пользователь ${user.name}`,
     // robots: {
     //   index: false,
     //   follow: true,
@@ -36,11 +37,12 @@ export async function generateMetadata({ params: { id } }: GetIdPath): Promise<M
 export const revalidate = 86400;
 
 export default async function PublicProfile<NextPage>({ params: { id } }: GetIdPath) {
-  const user = await getUserById(id);
+  const userId = Number(id);
+  const user = await getUserById(userId);
   if (!user) {
     return notFound();
   }
-  const posts = await fetchPosts({ userId: id });
+  const posts = await fetchPosts({ userId });
 
   return (
     <>
@@ -53,7 +55,7 @@ export default async function PublicProfile<NextPage>({ params: { id } }: GetIdP
         Количество объявлений: <span>{posts.length}</span>
       </p>
       <Posts posts={posts} className="mt-10" />
-      <a href={tgLink + '/' + user.username} className={clsx(buttonStyles(), 'mt-8 block')}>
+      <a href={emailLink + user.email} className={clsx(buttonStyles(), 'mt-8 block')}>
         Написать пользователю
       </a>
     </>

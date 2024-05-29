@@ -1,12 +1,10 @@
 'use client';
 import Popup from '@/components/ui/Popup';
-import { stateAtom } from '@/state';
-import loginTelegram from '@/utils/api/prisma/loginTelegram';
+import { decodeToken, MESSAGE_TOKEN_ERROR } from '@/context/AuthContext/utils';
+import { GoogleUser } from '@/pages-lib/profile/ProfileNoUser';
+import loginGoogle from '@/utils/api/prisma/loginGoogle';
 import { User } from '@prisma/client';
-import * as jose from 'jose';
-import { useAtom } from 'jotai';
-import { useSession } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
 
 type authContextType = {
@@ -28,28 +26,12 @@ type Props = {
   children: ReactNode;
 };
 
-const MESSAGE_TOKEN_ERROR =
-  'Что-то пошло не так: попробуйте перезапустить сайт/бота и авторизоваться заново';
-const MESSAGE_USER_BANNED = 'Ваш аккаунт заблокирован';
-
-const decodeToken = async (token: string) => {
-  try {
-    const decoded: jose.JWTPayload = await jose.decodeJwt(token);
-    return decoded;
-  } catch (error) {
-    console.error('decodeToken', error);
-  }
-};
-
 export default function AuthProvider({ children }: Props) {
-  const { data: session } = useSession();
-  console.log('SESSION', session);
   const [message, setMessage] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const token = searchParams.get('token');
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+
   const checkToken = useCallback(async () => {
     setLoading(true);
     try {
@@ -62,7 +44,7 @@ export default function AuthProvider({ children }: Props) {
         if (decoded) {
           // console.log('decoded', decoded);
           // создаем/обновляем пользователя
-          const res = await loginTelegram(decoded as User);
+          const res = await loginGoogle(decoded as GoogleUser);
 
           // если получилось, то
           if (res) {
@@ -70,12 +52,6 @@ export default function AuthProvider({ children }: Props) {
             const { token, upsertUser } = res;
             // токен - в localStorage, пользователя в state
             login(upsertUser, token);
-            // дополнительно проверяем, забанен ли пользователь
-            // if (upsertUser.bans.length > 0) {
-            //   // если да, то сообщаем ему об этом
-            //   setIsOpen(true);
-            //   setMessage(MESSAGE_USER_BANNED);
-            // }
           } else {
             logout();
           }
@@ -95,15 +71,9 @@ export default function AuthProvider({ children }: Props) {
       setLoading(false);
     }
   }, []);
-  const [telegram, setTelegram] = useAtom(stateAtom);
 
   // @ts-ignore
   useEffect(() => {
-    // console.log('token', token);
-    if (token) {
-      localStorage.setItem('token', token);
-      setTelegram(1);
-    }
     checkToken();
     return () => checkToken();
   }, []);
@@ -114,8 +84,10 @@ export default function AuthProvider({ children }: Props) {
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setUser(undefined);
+    signOut().then(() => {
+      localStorage.removeItem('token');
+      setUser(undefined);
+    });
   };
 
   const value = {

@@ -8,7 +8,6 @@ import useApp from '@/hooks/useApp';
 import useAuth from '@/hooks/useAuth';
 import useToast from '@/hooks/useToast';
 import favouritesAtom from '@/state';
-import postTelegram from '@/utils/api/telegram/postTelegram';
 import { NO_IMAGE, routes } from '@/utils/constants';
 import { Post, User } from '@prisma/client';
 import { useAtom } from 'jotai';
@@ -31,7 +30,7 @@ export default function Item({ post, edit = false }: ItemProps) {
   const { toast, setToast } = useToast();
   const [favourites, setFavourites] = useAtom(favouritesAtom);
   const { user } = useAuth();
-  const { id,preview, price, categoryId, description, images } = post;
+  const { id, preview, price, categoryId, description, images } = post;
 
   const liked = useMemo(() => !!favourites.find(x => x.id === id), [favourites, id]);
 
@@ -49,7 +48,6 @@ export default function Item({ post, edit = false }: ItemProps) {
         return;
       }
       if (modalText === ItemModalText.telegram) {
-        await postTelegram(post, user as User, categories);
         alert(success.telegram);
         router.push(routes.profile);
         return;
@@ -119,7 +117,7 @@ export default function Item({ post, edit = false }: ItemProps) {
             fill
             style={{ objectFit: 'cover' }}
             sizes="(max-width: 768px) 45vw, (max-width: 1024px) 25vw, 200px"
-            alt=''
+            alt=""
             src={preview}
             placeholder="blur"
             blurDataURL={NO_IMAGE}

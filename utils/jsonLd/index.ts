@@ -1,4 +1,3 @@
-import { tgLink } from '@/utils/constants';
 import { dateFormat } from '@/utils/date';
 import type { Article, Post, User } from '@prisma/client';
 import dayjs from 'dayjs';
@@ -15,7 +14,7 @@ const getMainPageJsonLd = (): WithContext<WebSite> => ({
 const getPostJsonLd = (post: Post): WithContext<Product> => ({
   ['@context']: 'https://schema.org',
   '@type': 'Product',
-  name: post.description.substring(0,32),
+  name: post.description.substring(0, 32),
   image: post.preview,
   description: post.description,
   offers: {
@@ -62,7 +61,7 @@ const getBlogJsonLd = (articles: Article[]): WithContext<Blog> => ({
 const getPersonJsonLd = (user: User): WithContext<Person> => ({
   ['@context']: 'https://schema.org',
   '@type': 'Person',
-  '@id': tgLink + '/' + user.username,
+  '@id': user.email,
 });
 
 export { getMainPageJsonLd, getPostJsonLd, getBlogPostJsonLd, getBlogJsonLd, getPersonJsonLd };

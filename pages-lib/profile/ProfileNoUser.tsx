@@ -1,29 +1,39 @@
-import Button from '@/components/ui/Button';
 import useAuth from '@/hooks/useAuth';
-import loginTelegram from '@/utils/api/prisma/loginTelegram';
-import { ERROR_ALIAS_MESSAGE, userTemplate, ERROR_TOKEN_MESSAGE } from './utils';
-// import { TelegramUser } from '@/types';
+import buttonStyles from '@/styles/buttonStyles';
+import loginGoogle from '@/utils/api/prisma/loginGoogle';
 import * as jose from 'jose';
-import React from 'react';
-import TelegramLoginButton, { TelegramUser } from 'telegram-login-button';
+import { signIn, useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
+import { ERROR_TOKEN_MESSAGE } from './utils';
+
+export type GoogleUser = {
+  email: string;
+  name: string;
+  image?: string;
+};
 
 export default function ProfileNoUser() {
-  const { login } = useAuth();
+  const { data: session, status } = useSession();
+  const { login, user } = useAuth();
 
-  const handleTelegram = async (user: TelegramUser) => {
-    if (!user.username) {
-      return alert({ ERROR_ALIAS_MESSAGE });
-    }
+  useEffect(() => {
+    handleLogin();
+  }, [session]);
+
+  const handleLogin = async () => {
     try {
-      const response = await loginTelegram(user);
-      // console.log('token', response);
-      if (response) {
-        const decoded = jose.decodeJwt(response.token);
-        // console.log('decoded', decoded);
-        if (decoded) {
-          login(response.upsertUser, response.token);
-        } else {
-          return alert({ ERROR_TOKEN_MESSAGE });
+      if (session && session.user) {
+        console.log('HERE', session?.user);
+        const response = await loginGoogle(session.user as GoogleUser);
+        // console.log('token', response);
+        if (response) {
+          const decoded = jose.decodeJwt(response.token);
+          // console.log('decoded', decoded);
+          if (decoded) {
+            login(response.upsertUser, response.token);
+          } else {
+            return alert({ ERROR_TOKEN_MESSAGE });
+          }
         }
       }
     } catch (e) {
@@ -34,10 +44,9 @@ export default function ProfileNoUser() {
   return (
     <section className="flex flex-1 flex-col items-center justify-center">
       <h1>Авторизация</h1>
-      <TelegramLoginButton botName={process.env.NEXT_PUBLIC_BOT_NAME} dataOnauth={handleTelegram} />
-      {process.env.NEXT_PUBLIC_NODE_ENV === 'development' && (
-        <Button onClick={async () => await handleTelegram(userTemplate)}>Imitate</Button>
-      )}
+      <button className={buttonStyles({ size: 'medium' })} onClick={() => signIn('google')}>
+        Sign in with Google
+      </button>
     </section>
   );
 }

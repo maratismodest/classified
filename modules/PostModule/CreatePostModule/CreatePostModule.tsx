@@ -7,15 +7,12 @@ import useAuth from '@/hooks/useAuth';
 import ImagesModuleInput from '@/modules/PostModule/ImagesModule/ImagesModuleInput';
 import ImagesModulePreview from '@/modules/PostModule/ImagesModule/ImagesModulePreview';
 import imageHandler from '@/modules/PostModule/ImagesModule/utils';
-import { stateAtom } from '@/state';
 import buttonStyles from '@/styles/buttonStyles';
 import inputStyles from '@/styles/inputStyles';
 import { CreatePostDTO } from '@/types';
 import postAd from '@/utils/api/prisma/postPost';
-import { Field, Label } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
-import { useAtomValue } from 'jotai';
 import { LatLng } from 'leaflet';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
@@ -27,7 +24,6 @@ const DynamicLeafletMap = dynamic(() => import('@/components/AddMap'), {
 });
 
 export default function CreatePostModule() {
-  const isTelegram = useAtomValue(stateAtom);
   const { categories } = useApp();
   const { user, loading: userLoading } = useAuth();
 
@@ -112,7 +108,7 @@ export default function CreatePostModule() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} className="form gap-2">
-        <h1>Новое объявление{isTelegram === 1 ? '.' : '!'}</h1>
+        <h1>Новое объявление</h1>
         <div className="bg-white-700 mx-auto my-5 h-[400px] w-full">
           <DynamicLeafletMap
             clickedPosition={clickedPosition}

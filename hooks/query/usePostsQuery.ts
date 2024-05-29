@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 interface Params {
   size: number;
   page: number;
-  userId: string;
+  userId: number;
   categoryId: number;
   published: boolean;
   search: string;

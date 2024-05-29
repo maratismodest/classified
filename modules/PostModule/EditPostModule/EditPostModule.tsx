@@ -4,7 +4,6 @@ import SelectHeadlessUi from '@/components/SelectHeadlessUi';
 import Spinner from '@/components/ui/Spinner';
 import useApp from '@/hooks/useApp';
 import useAuth from '@/hooks/useAuth';
-import useTelegram from '@/hooks/useTelegram';
 import ImagesModuleInput from '@/modules/PostModule/ImagesModule/ImagesModuleInput';
 import ImagesModulePreview from '@/modules/PostModule/ImagesModule/ImagesModulePreview';
 import imageHandler from '@/modules/PostModule/ImagesModule/utils';
@@ -31,7 +30,6 @@ export default function EditPostModule({
 }: PostModuleProps) {
   const { categories } = useApp();
   const { user } = useAuth();
-  const { tg } = useTelegram();
 
   const methods = useForm<IFormInput>({
     resolver: yupResolver(schema),
@@ -59,27 +57,6 @@ export default function EditPostModule({
 
   const images = useWatch({ name: 'images', control }) as string[];
 
-  useEffect(() => {
-    tg?.MainButton.setParams({
-      text: 'Закрыть окно',
-    });
-  }, [tg?.MainButton]);
-
-  const onSendData = useCallback(() => {
-    const data = {
-      type: 'success',
-      text: 'Объявление создано!',
-    };
-    tg?.sendData(JSON.stringify(data));
-  }, [tg]);
-
-  useEffect(() => {
-    tg?.onEvent('mainButtonClicked', onSendData);
-    return () => {
-      tg?.offEvent('mainButtonClicked', onSendData);
-    };
-  }, [onSendData, tg]);
-
   if (!user) {
     return <Spinner />;
   }
@@ -104,7 +81,6 @@ export default function EditPostModule({
       // console.log('post', post);
       // }
       reset();
-      tg?.MainButton.show();
       alert('Объявление изменено!');
       await onSubmitOptional();
     } catch (e) {
@@ -143,7 +119,13 @@ export default function EditPostModule({
 
         <div>
           <label htmlFor="body">Описание</label>
-          <textarea rows={5} cols={5} {...register('description')} name="description" className="w-full" />
+          <textarea
+            rows={5}
+            cols={5}
+            {...register('description')}
+            name="description"
+            className="w-full"
+          />
           <span className="text-red">{errors.description?.message}</span>
         </div>
 

@@ -134,7 +134,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: false,
     meters: 53,
   },
@@ -151,7 +151,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: false,
     meters: 74,
   },
@@ -168,7 +168,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: false,
     meters: 20,
   },
@@ -185,7 +185,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: true,
     meters: 94,
   },
@@ -202,7 +202,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: true,
     meters: 89,
   },
@@ -219,7 +219,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: true,
     meters: 3,
   },
@@ -236,7 +236,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: false,
     meters: 24,
   },
@@ -253,7 +253,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: true,
     meters: 39,
   },
@@ -270,7 +270,7 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: false,
     meters: 67,
   },
@@ -287,21 +287,21 @@ const initialPosts: CreatePostDTO[] = [
     // createdAt: new Date('2024-05-17T10:56:53.893Z'),
     // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
     published: true,
-    userId: '71233480',
+    userId: 24,
     furnished: true,
     meters: 8,
   },
 ];
 
-const initialUsers: User[] = [
-  {
-    id: '71233480',
-    username: 'maratfaizer',
-    createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    role: 'USER',
-  },
-];
+// const initialUsers: User[] = [
+//   {
+//     id: '71233480',
+//     username: 'maratfaizer',
+//     createdAt: new Date('2024-05-17T10:56:53.893Z'),
+//     updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+//     role: 'USER',
+//   },
+// ];
 
 const seedArticles = async () => {
   await prisma.article.deleteMany();
@@ -314,23 +314,23 @@ const seedArticles = async () => {
 };
 
 const seed = async () => {
-  await seedArticles();
+  // await seedArticles();
 
   await prisma.post.deleteMany();
-  await prisma.category.deleteMany();
-  await prisma.user.deleteMany();
+  // await prisma.category.deleteMany();
+  // await prisma.user.deleteMany();
 
-  for (const user of initialUsers) {
-    await prisma.user.create({
-      data: user,
-    });
-  }
+  // for (const user of initialUsers) {
+  //   await prisma.user.create({
+  //     data: user,
+  //   });
+  // }
 
-  for (const category of initialCategories) {
-    await prisma.category.create({
-      data: category,
-    });
-  }
+  // for (const category of initialCategories) {
+  //   await prisma.category.create({
+  //     data: category,
+  //   });
+  // }
 
   for (const post of initialPosts) {
     await prisma.post.create({
