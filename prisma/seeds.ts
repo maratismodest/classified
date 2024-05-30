@@ -1,7 +1,7 @@
-import { parsed } from '@/prisma/parsed';
+import { _current } from '@/prisma/utils';
 import { CreatePostDTO } from '@/types';
 import { generateMockCoordinatesSingle, getRandomInteger } from '@/utils/generateMockCoordinates';
-import { Article, Category, Post, PrismaClient, User } from '@prisma/client';
+import { Article, Category, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -122,222 +122,36 @@ const initialArticlesSofia: Article[] = [
   },
 ];
 
-const getInitialPosts = () => {
-  return parsed.map(x => {
-    const loc = generateMockCoordinatesSingle();
-    return {
-      // id: 1,
-      latitude: loc.latitude,
-      longitude: loc.longitude,
-      price: getRandomInteger(100000, 500000),
-      preview: x.preview,
-      description: x.description,
-      images: x.preview,
-      rooms: getRandomInteger(1, 4),
-      categoryId: getRandomInteger(1, 3),
-      // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-      // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-      published: true,
-      userId: 24,
-      furnished: Boolean(getRandomInteger(0, 2)),
-      meters: getRandomInteger(20, 100),
-      address: 'ул. Георгиевская, 10',
-    };
-  });
+const getInitialPosts = (): CreatePostDTO[] => {
+  return (
+    _current
+      // .filter(x => x.coordinates)
+      .map(x => {
+        const loc = x.coordinates
+          ? { latitude: x.coordinates.glat, longitude: x.coordinates.glng }
+          : generateMockCoordinatesSingle();
+        const images = x.pictures.map(x => 'https://' + x);
+        return {
+          // id: 1,
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          price: Number(x.price),
+          preview: images[0],
+          description: x.raion,
+          images: images.join('||'),
+          rooms: getRandomInteger(1, 4),
+          categoryId: getRandomInteger(1, 3),
+          // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+          // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+          published: true,
+          userId: 24,
+          furnished: Boolean(getRandomInteger(0, 2)),
+          meters: Number(x.quadrature),
+          address: x.town + ' ' + x.raion,
+        };
+      })
+  );
 };
-
-const initialPosts: CreatePostDTO[] = [
-  {
-    // id: 1,
-    latitude: '42.69833273089854',
-    longitude: '23.31327574081007',
-    price: 860384,
-    preview: parsed[1].preview,
-    description: parsed[1].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 2,
-    categoryId: 1,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: false,
-    meters: 53,
-    address: 'ул. Георгиевская, 10',
-  },
-  {
-    // id: 2,
-    latitude: '42.69884944376986',
-    longitude: '23.321064918905655',
-    price: 429257,
-    preview: parsed[2].preview,
-    description: parsed[2].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 2,
-    categoryId: 1,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: false,
-    meters: 74,
-    address: 'ул. Георгиевская, 12',
-  },
-  {
-    // id: 3,
-    latitude: '42.689411045620666',
-    longitude: '23.324950098525367',
-    price: 495059,
-    preview: parsed[3].preview,
-    description: parsed[3].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 1,
-    categoryId: 2,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: false,
-    meters: 20,
-    address: 'ул. Георгиевская, 16',
-  },
-  {
-    // id: 4,
-    latitude: '42.697818225738715',
-    longitude: '23.322031994605958',
-    price: 391718,
-    preview: parsed[4].preview,
-    description: parsed[4].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 3,
-    categoryId: 1,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: true,
-    meters: 94,
-    address: 'ул. Георгиевская, 18',
-  },
-  {
-    // id: 5,
-    latitude: '42.704634767807605',
-    longitude: '23.327599318954764',
-    price: 464823,
-    preview: parsed[5].preview,
-    description: parsed[5].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 3,
-    categoryId: 2,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: true,
-    meters: 89,
-    address: 'ул. Георгиевская, 20',
-  },
-  {
-    // id: 6,
-    latitude: '42.702853957931005',
-    longitude: '23.319621537427807',
-    price: 550163,
-    preview: parsed[6].preview,
-    description: parsed[6].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 1,
-    categoryId: 2,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: true,
-    meters: 3,
-    address: 'ул. Георгиевская, 30',
-  },
-  {
-    // id: 7,
-    latitude: '42.701731724507134',
-    longitude: '23.31801677384061',
-    price: 827423,
-    preview: parsed[7].preview,
-    description: parsed[7].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 1,
-    categoryId: 2,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: false,
-    meters: 24,
-    address: 'ул. Георгиевская, 40',
-  },
-  {
-    // id: 8,
-    latitude: '42.69779503738465',
-    longitude: '23.322682300818244',
-    price: 805864,
-    preview: parsed[8].preview,
-    description: parsed[8].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 3,
-    categoryId: 2,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: true,
-    meters: 39,
-    address: 'ул. Георгиевская, 60',
-  },
-  {
-    // id: 9,
-    latitude: '42.69030618054631',
-    longitude: '23.32666103735413',
-    price: 718156,
-    preview: parsed[9].preview,
-    description: parsed[9].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 3,
-    categoryId: 1,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: false,
-    meters: 67,
-    address: 'ул. Георгиевская, 70',
-  },
-  {
-    // id: 10,
-    latitude: '42.704343756615806',
-    longitude: '23.325421456923312',
-    price: 333931,
-    preview: parsed[10].preview,
-    description: parsed[10].description,
-    images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
-    rooms: 3,
-    categoryId: 1,
-    // createdAt: new Date('2024-05-17T10:56:53.893Z'),
-    // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-    published: true,
-    userId: 24,
-    furnished: true,
-    meters: 8,
-    address: 'ул. Георгиевская, 90',
-  },
-];
-
-// const initialUsers: User[] = [
-//   {
-//     id: '71233480',
-//     username: 'maratfaizer',
-//     createdAt: new Date('2024-05-17T10:56:53.893Z'),
-//     updatedAt: new Date('2024-05-17T10:56:53.893Z'),
-//     role: 'USER',
-//   },
-// ];
 
 const seedArticles = async () => {
   await prisma.article.deleteMany();
