@@ -60,6 +60,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
     createdAt,
     furnished,
     address,
+    categoryId,
   } = post;
 
   const properties = [
@@ -84,6 +85,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
     <div className="relative mx-auto w-full max-w-[400px]">
       <PostPage post={post} />
       <h1>{rooms}-комнатная квартира</h1>
+      <p>Категория: {categories.find(x => x.value === categoryId)?.label}</p>
       <Price price={price} />
       <p>Адрес: {address}</p>
       <hr />

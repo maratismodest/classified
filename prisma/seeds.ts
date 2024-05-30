@@ -1,4 +1,4 @@
-import { _current } from '@/prisma/utils';
+import { _current, rental } from '@/prisma/utils';
 import { CreatePostDTO } from '@/types';
 import { generateMockCoordinatesSingle, getRandomInteger } from '@/utils/generateMockCoordinates';
 import { Article, Category, PrismaClient } from '@prisma/client';
@@ -122,9 +122,34 @@ const initialArticlesSofia: Article[] = [
   },
 ];
 
+const getRooms = (value: string | undefined) => {
+  switch (value) {
+    case '1-СТАЕН':
+      return 1;
+    case '2-СТАЕН':
+      return 2;
+    case '3-СТАЕН':
+      return 3;
+    default:
+      return getRandomInteger(1, 4);
+  }
+};
+
+const getSellType = (value: string | undefined) => {
+  switch (value) {
+    case 'Продава':
+      return 1;
+    case 'Дава под наем':
+      return 2;
+    default:
+      return getRandomInteger(1, 3);
+  }
+};
+
 const getInitialPosts = (): CreatePostDTO[] => {
+  const res = _current.concat(rental);
   return (
-    _current
+    res
       // .filter(x => x.coordinates)
       .map(x => {
         const loc = x.coordinates
@@ -139,8 +164,8 @@ const getInitialPosts = (): CreatePostDTO[] => {
           preview: images[0],
           description: x.raion,
           images: images.join('||'),
-          rooms: getRandomInteger(1, 4),
-          categoryId: getRandomInteger(1, 3),
+          rooms: getRooms(x.type_home),
+          categoryId: getSellType(x.sell_type),
           // createdAt: new Date('2024-05-17T10:56:53.893Z'),
           // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
           published: true,

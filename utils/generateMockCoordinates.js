@@ -1,6 +1,6 @@
 const center = { latitude: 42.6977, longitude: 23.3219 };
 const numPoints = 10;
-const radius = 1; // approximately 1 km radius
+const radius = 2; // approximately 1 km radius
 
 export const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
