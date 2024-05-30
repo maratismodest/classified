@@ -5,7 +5,6 @@ import usePostsQuery from '@/hooks/query/usePostsQuery';
 import { defaultSearchValues, ISearchFormInput, searchSchema } from '@/modules/PostModule/yup';
 import { furnishedOptions } from '@/pages-lib/main/utils';
 import buttonStyles from '@/styles/buttonStyles';
-import { Option } from '@/types/global';
 import cleanObject from '@/utils/cleanObject';
 import getBooleanUndefinded from '@/utils/getBooleanOrUndefined';
 import {
@@ -32,18 +31,22 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
   ssr: false,
 });
+
 interface Props {
   minPrice: number;
   maxPrice: number;
   categories: { value: string; label: string }[];
 }
+
 const Main = ({ minPrice, maxPrice, categories }: Props) => {
+  const [page, setPage] = useState(1);
+
   const methods = useForm<ISearchFormInput>({
     resolver: yupResolver(searchSchema),
     defaultValues: { ...defaultSearchValues, min: minPrice, max: maxPrice },
@@ -117,7 +120,7 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                       <Select
                         id={field.name}
                         className={clsx(
-                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1.5 text-sm/6',
+                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1 text-sm/6',
                           'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
                           // Make the text of each option black on Windows
                           '*:text-black'
@@ -149,7 +152,7 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                       <Select
                         id={field.name}
                         className={clsx(
-                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1.5 text-sm/6',
+                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1 text-sm/6',
                           'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
                           // Make the text of each option black on Windows
                           '*:text-black'
@@ -256,7 +259,22 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
             </div>
           </TabPanel>
           <TabPanel className="!px-0">
-            <Posts posts={posts} />
+            <Posts posts={posts.slice((page - 1) * 20, page * 20)} />
+            {posts && posts.length && (
+              <ul className="mt-4 flex items-center gap-1">
+                {Array.from({ length: Math.ceil(posts.length / 20) }).map((x, index) => (
+                  <li key={index} className="rounded border px-2">
+                    <button
+                      onClick={() => {
+                        setPage(index + 1);
+                      }}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </TabPanel>
         </TabPanels>
       </TabGroup>
