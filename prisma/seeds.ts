@@ -155,7 +155,7 @@ const getInitialPosts = (): CreatePostDTO[] => {
         const loc = x.coordinates
           ? { latitude: x.coordinates.glat, longitude: x.coordinates.glng }
           : generateMockCoordinatesSingle();
-        const images = x.pictures.map(x => 'https://' + x);
+        const images = x.pictures.map(x => 'https:' + x);
         return {
           // id: 1,
           latitude: loc.latitude,
