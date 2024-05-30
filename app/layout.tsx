@@ -1,6 +1,6 @@
 import Header from '@/components/Header/Header';
 import AppProvider from '@/context/AppContext';
-import AuthProvider from '@/context/AuthContext/AuthContext';
+import AuthProvider from '@/context/AuthContext';
 import ModalProvider from '@/context/ModalContext';
 import NextAuthProvider from '@/context/NextAuthContext';
 import QueryProvider from '@/context/QueryContext';

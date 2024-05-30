@@ -1,11 +1,15 @@
 'use client';
 import Popup from '@/components/ui/Popup';
-import { decodeToken, MESSAGE_TOKEN_ERROR } from '@/context/AuthContext/utils';
 import { GoogleUser } from '@/pages-lib/profile/ProfileNoUser';
 import loginGoogle from '@/utils/api/prisma/loginGoogle';
+import decodeToken from '@/utils/decodeToken';
+import generateToken from '@/utils/generateToken';
 import { User } from '@prisma/client';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+
+const MESSAGE_TOKEN_ERROR =
+  'Что-то пошло не так: попробуйте перезапустить сайт/бота и авторизоваться заново';
 
 type authContextType = {
   user: User | undefined;
@@ -27,6 +31,7 @@ type Props = {
 };
 
 export default function AuthProvider({ children }: Props) {
+  const { data: session, status } = useSession();
   // Popup
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState<string>('');
@@ -79,6 +84,19 @@ export default function AuthProvider({ children }: Props) {
     checkToken();
     return () => checkToken();
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      return;
+    }
+    if (session && session.user) {
+      generateToken(session.user as GoogleUser).then(_token => {
+        localStorage.setItem('token', _token);
+        checkToken();
+      });
+    }
+  }, [session?.user]);
 
   const login = (user: User, token: string) => {
     localStorage.setItem('token', token);

@@ -83,8 +83,6 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
     [_furnished, _rooms, _min, _max, _categoryId]
   );
 
-  console.log('_categoryId', _categoryId);
-
   const { posts, postsLoading, postsRefetch, postsError } = usePostsQuery(options);
 
   if (!posts) {

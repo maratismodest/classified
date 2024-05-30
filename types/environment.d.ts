@@ -16,6 +16,8 @@ declare global {
       NEXT_PUBLIC_API_URL: string;
       NEXT_PUBLIC_CURRENCY: string;
       NEXT_PUBLIC_LOCALE: string;
+      GOOGLE_CLIENT_ID: string;
+      GOOGLE_CLIENT_SECRET: string;
     }
   }
 }
