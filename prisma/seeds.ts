@@ -1,4 +1,6 @@
+import { parsed } from '@/prisma/parsed';
 import { CreatePostDTO } from '@/types';
+import { generateMockCoordinatesSingle, getRandomInteger } from '@/utils/generateMockCoordinates';
 import { Article, Category, Post, PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -120,14 +122,38 @@ const initialArticlesSofia: Article[] = [
   },
 ];
 
+const getInitialPosts = () => {
+  return parsed.map(x => {
+    const loc = generateMockCoordinatesSingle();
+    return {
+      // id: 1,
+      latitude: loc.latitude,
+      longitude: loc.longitude,
+      price: getRandomInteger(100000, 500000),
+      preview: x.preview,
+      description: x.description,
+      images: x.preview,
+      rooms: getRandomInteger(1, 4),
+      categoryId: getRandomInteger(1, 3),
+      // createdAt: new Date('2024-05-17T10:56:53.893Z'),
+      // updatedAt: new Date('2024-05-17T10:56:53.893Z'),
+      published: true,
+      userId: 24,
+      furnished: Boolean(getRandomInteger(0, 2)),
+      meters: getRandomInteger(20, 100),
+      address: 'ул. Георгиевская, 10',
+    };
+  });
+};
+
 const initialPosts: CreatePostDTO[] = [
   {
     // id: 1,
     latitude: '42.69833273089854',
     longitude: '23.31327574081007',
     price: 860384,
-    preview: '/images/1/1.jpg',
-    description: '2 комнатная квартира',
+    preview: parsed[1].preview,
+    description: parsed[1].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 2,
     categoryId: 1,
@@ -144,8 +170,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.69884944376986',
     longitude: '23.321064918905655',
     price: 429257,
-    preview: '/images/1/1.jpg',
-    description: '2 комнатная квартира',
+    preview: parsed[2].preview,
+    description: parsed[2].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 2,
     categoryId: 1,
@@ -162,8 +188,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.689411045620666',
     longitude: '23.324950098525367',
     price: 495059,
-    preview: '/images/1/1.jpg',
-    description: '1 комнатная квартира',
+    preview: parsed[3].preview,
+    description: parsed[3].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 1,
     categoryId: 2,
@@ -180,8 +206,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.697818225738715',
     longitude: '23.322031994605958',
     price: 391718,
-    preview: '/images/1/1.jpg',
-    description: '3 комнатная квартира',
+    preview: parsed[4].preview,
+    description: parsed[4].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 1,
@@ -198,8 +224,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.704634767807605',
     longitude: '23.327599318954764',
     price: 464823,
-    preview: '/images/1/1.jpg',
-    description: '3 комнатная квартира',
+    preview: parsed[5].preview,
+    description: parsed[5].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 2,
@@ -216,8 +242,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.702853957931005',
     longitude: '23.319621537427807',
     price: 550163,
-    preview: '/images/1/1.jpg',
-    description: '1 комнатная квартира',
+    preview: parsed[6].preview,
+    description: parsed[6].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 1,
     categoryId: 2,
@@ -234,8 +260,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.701731724507134',
     longitude: '23.31801677384061',
     price: 827423,
-    preview: '/images/1/1.jpg',
-    description: '1 комнатная квартира',
+    preview: parsed[7].preview,
+    description: parsed[7].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 1,
     categoryId: 2,
@@ -252,8 +278,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.69779503738465',
     longitude: '23.322682300818244',
     price: 805864,
-    preview: '/images/1/1.jpg',
-    description: '3 комнатная квартира',
+    preview: parsed[8].preview,
+    description: parsed[8].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 2,
@@ -270,8 +296,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.69030618054631',
     longitude: '23.32666103735413',
     price: 718156,
-    preview: '/images/1/1.jpg',
-    description: '3 комнатная квартира',
+    preview: parsed[9].preview,
+    description: parsed[9].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 1,
@@ -288,8 +314,8 @@ const initialPosts: CreatePostDTO[] = [
     latitude: '42.704343756615806',
     longitude: '23.325421456923312',
     price: 333931,
-    preview: '/images/1/1.jpg',
-    description: '3 комнатная квартира',
+    preview: parsed[10].preview,
+    description: parsed[10].description,
     images: '/images/1/1.jpg||/images/1/2.jpg||/images/1/3.jpg',
     rooms: 3,
     categoryId: 1,
@@ -341,8 +367,9 @@ const seed = async () => {
   //     data: category,
   //   });
   // }
-
-  for (const post of initialPosts) {
+  const res = getInitialPosts();
+  console.log('res', res.length);
+  for (const post of res) {
     await prisma.post.create({
       data: post,
     });

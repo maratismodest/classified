@@ -13,6 +13,12 @@ const nextConfig = {
                 // port: '',
                 // pathname: '*',
             },
+            {
+                protocol: 'https',
+                hostname: '*',
+                // port: '',
+                // pathname: '*',
+            },
         ],
         formats: ['image/avif', 'image/webp'],
     },
