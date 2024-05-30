@@ -7,6 +7,7 @@ import { furnishedOptions } from '@/pages-lib/main/utils';
 import buttonStyles from '@/styles/buttonStyles';
 import cleanObject from '@/utils/cleanObject';
 import getBooleanUndefinded from '@/utils/getBooleanOrUndefined';
+import scrollToTop from '@/utils/scrollToTop';
 import {
   RangeSlider,
   RangeSliderFilledTrack,
@@ -267,6 +268,7 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                     <button
                       onClick={() => {
                         setPage(index + 1);
+                        scrollToTop();
                       }}
                     >
                       {index + 1}
