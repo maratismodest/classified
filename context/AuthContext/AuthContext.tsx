@@ -5,7 +5,7 @@ import { GoogleUser } from '@/pages-lib/profile/ProfileNoUser';
 import loginGoogle from '@/utils/api/prisma/loginGoogle';
 import { User } from '@prisma/client';
 import { signOut } from 'next-auth/react';
-import { createContext, ReactNode, useCallback, useEffect, useState } from 'react';
+import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
 type authContextType = {
   user: User | undefined;
@@ -27,8 +27,12 @@ type Props = {
 };
 
 export default function AuthProvider({ children }: Props) {
-  const [message, setMessage] = useState<string>('');
+  // Popup
   const [isOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const popupButtons = useMemo(() => [{ text: 'ОК', onClick: () => setIsOpen(false) }], []);
+
+  // User
   const [user, setUser] = useState<User | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
@@ -40,13 +44,10 @@ export default function AuthProvider({ children }: Props) {
       if (token) {
         // пытаемся понять, валидный ли токен
         const decoded = await decodeToken(token);
-        console.log('decoded', decoded);
         // если токен валидный
         if (decoded) {
-          // console.log('decoded', decoded);
           // создаем/обновляем пользователя
           const res = await loginGoogle(decoded as GoogleUser);
-
           // если получилось, то
           if (res) {
             // получаем новый токен и нового пользователя
@@ -99,12 +100,7 @@ export default function AuthProvider({ children }: Props) {
   };
   return (
     <AuthContext.Provider value={value}>
-      <Popup
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        text={message}
-        buttons={[{ text: 'ОК', onClick: () => setIsOpen(false) }]}
-      />
+      <Popup isOpen={isOpen} setIsOpen={setIsOpen} text={message} buttons={popupButtons} />
       {children}
     </AuthContext.Provider>
   );

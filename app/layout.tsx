@@ -5,7 +5,7 @@ import ModalProvider from '@/context/ModalContext';
 import NextAuthProvider from '@/context/NextAuthContext';
 import QueryProvider from '@/context/QueryContext';
 import ToastProvider from '@/context/ToastContext';
-import { Providers } from '@/providers/chakra-provider';
+import ChakraUiProvider from '@/providers/chakra-provider';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import React, { Suspense } from 'react';
@@ -35,7 +35,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Suspense>
           <QueryProvider>
-            <Providers>
+            <ChakraUiProvider>
               <NextAuthProvider>
                 <AuthProvider>
                   <AppProvider>
@@ -48,7 +48,7 @@ export default function RootLayout({
                   </AppProvider>
                 </AuthProvider>
               </NextAuthProvider>
-            </Providers>
+            </ChakraUiProvider>
           </QueryProvider>
         </Suspense>
       </body>

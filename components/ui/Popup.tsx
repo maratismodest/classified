@@ -2,14 +2,16 @@ import Button from '@/components/ui/Button';
 import { DialogPanel, DialogTitle, Dialog } from '@headlessui/react';
 import React from 'react';
 
+interface PopupButton {
+  text: string;
+  onClick: () => void;
+}
+
 interface PopupProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   text: string;
-  buttons: {
-    text: string;
-    onClick: () => void;
-  }[];
+  buttons: PopupButton[];
 }
 
 const Popup = ({ isOpen, setIsOpen, text, buttons }: PopupProps) => {
