@@ -91,9 +91,9 @@ export default async function Post({ params: { id } }: AdPageProps) {
       <hr />
       <p className="break-words">{description}</p>
 
-      <ul className="grid grid-cols-1 divide-y rounded border">
+      <ul className="border-borderColor divide-borderColor grid grid-cols-1 divide-y rounded border">
         {properties.map(({ value, label }) => (
-          <li key={label} className="grid grid-cols-2 divide-x">
+          <li key={label} className="divide-borderColor grid grid-cols-2 divide-x">
             <h5 className="p-1">{label}</h5>
             <p className="truncate p-1 text-right">{value}</p>
           </li>

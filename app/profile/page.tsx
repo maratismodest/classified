@@ -74,7 +74,10 @@ export default function ProfilePage<NextPage>() {
       {postsLoading && <Spinner />}
       {!postsLoading && posts.length > 0 && (
         <>
-          <Posts posts={posts.filter(({ published }) => published === true)} edit={true} />
+          <Posts
+            posts={posts.filter(({ published }) => published === true).slice(0, 20)}
+            edit={true}
+          />
           {archived.length > 0 && (
             <div className="w-full">
               <div className="text-center">
