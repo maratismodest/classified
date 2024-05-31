@@ -35,6 +35,7 @@ const config: Config = {
       black: '#151617',
       red: '#f00',
       inputBorder: 'hsl(0deg 0% 80%)',
+      borderColor: '#e2e8f0',
     },
   },
   plugins: [require('tailwindcss-displaymodes')],

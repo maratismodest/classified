@@ -8,12 +8,7 @@ import buttonStyles from '@/styles/buttonStyles';
 import cleanObject from '@/utils/cleanObject';
 import getBooleanUndefinded from '@/utils/getBooleanOrUndefined';
 import scrollToTop from '@/utils/scrollToTop';
-import {
-  RangeSlider,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  RangeSliderTrack,
-} from '@chakra-ui/react';
+import RangeSliderUi from '@/components/RangeSlider/RangeSlider';
 import {
   Checkbox,
   Disclosure,
@@ -102,12 +97,12 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
     <>
       <h1 className="text-lg">Результат фильтра: {posts?.length}</h1>
       <Disclosure defaultOpen>
-        <DisclosureButton className="rounded border">показать/скрыть фильтры</DisclosureButton>
-        <DisclosurePanel className="text-gray-500">
+        <DisclosureButton className="rounded">показать/скрыть фильтры</DisclosureButton>
+        <DisclosurePanel className="text-gray-500 pt-1">
           <FormProvider {...methods}>
             <Fieldset>
               <form
-                className="grid grid-cols-1 items-start gap-2 border px-4 py-2 md:grid-cols-5"
+                className="grid grid-cols-1 items-start gap-2 rounded border border-blue/50 px-4 py-2 md:grid-cols-5"
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <Controller
@@ -119,10 +114,11 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                       <Select
                         id={field.name}
                         className={clsx(
-                          'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1 text-sm/6',
+                          'block w-fit cursor-pointer appearance-none rounded-lg border bg-white/5 px-3 py-1 text-sm/6',
                           'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
                           // Make the text of each option black on Windows
-                          '*:text-black'
+                          '*:text-black',
+                          'border-borderColor'
                         )}
                         onChange={e => {
                           setValue(
@@ -154,7 +150,8 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                           'block w-fit appearance-none rounded-lg border bg-white/5 px-3 py-1 text-sm/6',
                           'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25',
                           // Make the text of each option black on Windows
-                          '*:text-black'
+                          '*:text-black',
+                          'border-borderColor'
                         )}
                         onChange={e => setValue('furnished', getBooleanUndefinded(e.target.value))}
                       >
@@ -177,7 +174,7 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                         <Label>{number}</Label>
                         <Checkbox
                           checked={Boolean(_rooms.includes(number))}
-                          className="group block size-5 rounded border bg-white data-[checked]:bg-blue"
+                          className="border-borderColor group block size-5 rounded border bg-white data-[checked]:bg-blue"
                           onChange={() =>
                             setValue(
                               'rooms',
@@ -207,29 +204,18 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                 </div>
 
                 <Field>
-                  <div className="flex justify-between">
-                    <span>{_min > 0 ? _min : minPrice}</span>
-                    <label htmlFor="price">цена</label>
-                    <span>{_max > 0 ? _max : maxPrice}</span>
-                  </div>
-                  <RangeSlider
-                    id="price"
-                    aria-label={['min', 'max']}
+                  <RangeSliderUi
                     min={minPrice}
                     max={maxPrice}
-                    step={1000}
-                    defaultValue={[_min, _max]}
-                    onChangeEnd={val => {
-                      setValue('min', val[0]);
-                      setValue('max', val[1]);
+                    minValue={_min}
+                    maxValue={_max}
+                    setMinValue={val => {
+                      setValue('min', val);
                     }}
-                  >
-                    <RangeSliderTrack>
-                      <RangeSliderFilledTrack />
-                    </RangeSliderTrack>
-                    <RangeSliderThumb index={0} />
-                    <RangeSliderThumb index={1} />
-                  </RangeSlider>
+                    setMaxValue={val => {
+                      setValue('max', val);
+                    }}
+                  />
                 </Field>
 
                 <div className="relative flex justify-end">
