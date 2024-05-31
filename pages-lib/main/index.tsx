@@ -97,12 +97,14 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
     <>
       <h1 className="text-lg">Результат фильтра: {posts?.length}</h1>
       <Disclosure defaultOpen>
-        <DisclosureButton className="rounded">показать/скрыть фильтры</DisclosureButton>
+        <DisclosureButton className="border-borderColor rounded border">
+          показать/скрыть фильтры
+        </DisclosureButton>
         <DisclosurePanel className="text-gray-500 pt-1">
           <FormProvider {...methods}>
             <Fieldset>
               <form
-                className="grid grid-cols-1 items-start gap-2 rounded border border-blue/50 px-4 py-2 md:grid-cols-5"
+                className="border-borderColor grid grid-cols-1 items-start gap-2 rounded border px-4 py-2 md:grid-cols-5"
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <Controller
@@ -218,8 +220,8 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                   />
                 </Field>
 
-                <div className="relative flex justify-end">
-                  <button type="submit" className={clsx(buttonStyles({ size: 'medium' }))}>
+                <div className="relative flex h-full items-center justify-end">
+                  <button type="submit" className={clsx(buttonStyles({ size: 'medium' }), 'h-fit')}>
                     поиск
                   </button>
                 </div>
