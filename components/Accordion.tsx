@@ -1,12 +1,11 @@
-import Posts from '@/components/Posts';
 import buttonStyles from '@/styles/buttonStyles';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { clsx } from 'clsx';
-import React from 'react';
+import { ReactNode } from 'react';
 
 interface AccordionProps {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 const Accordion = ({ children, title }: AccordionProps) => {
   return (

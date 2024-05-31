@@ -1,5 +1,5 @@
 import getAddressFromCoordinates from '@/utils/api/openstreetmap/getAddressByLocation';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 
 import 'leaflet/dist/leaflet.css';

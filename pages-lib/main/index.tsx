@@ -35,7 +35,7 @@ import dynamic from 'next/dynamic';
 import React, { useMemo, useState } from 'react';
 import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
-const DynamicLeafletMap = dynamic(() => import('@/components/Map'), {
+const DynamicLeafletMap = dynamic(() => import('@/components/Map/Map'), {
   ssr: false,
 });
 

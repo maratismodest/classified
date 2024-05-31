@@ -1,4 +1,3 @@
-import Arrow from '@/components/Arrow';
 import { Option } from '@/types/global';
 import {
   Listbox,
@@ -10,6 +9,7 @@ import {
 import { clsx } from 'clsx';
 import React, { Fragment } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import ArrowSvg from '@/public/svg/arrow.svg';
 
 export default function SelectHeadlessUi({ name, options }: { name: string; options: Option[] }) {
   const { control } = useFormContext();
@@ -30,7 +30,7 @@ export default function SelectHeadlessUi({ name, options }: { name: string; opti
             <ListboxButton className="flex h-9 w-full items-center justify-between rounded border border-inputBorder px-4 text-start">
               {options.find(x => x.value === value)?.label}
               <div className={clsx('ml-auto', open && 'rotate-180 transition ease-in-out')}>
-                <Arrow />
+                <ArrowSvg className="size-6" />
               </div>
             </ListboxButton>
             <Transition

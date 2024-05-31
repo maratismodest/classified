@@ -20,7 +20,7 @@ import React, { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import { defaultValues, IFormInput, schema } from '../yup';
 
-const DynamicLeafletMap = dynamic(() => import('@/components/AddMap'), {
+const DynamicLeafletMap = dynamic(() => import('@/components/Map/AddMap'), {
   ssr: false,
 });
 
