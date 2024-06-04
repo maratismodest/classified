@@ -1,7 +1,22 @@
-import { ItemModalText } from './utils';
-import Button from '@/components/ui/Button';
+import buttonStyles from '@/styles/buttonStyles';
 import clsx from 'clsx';
 import React from 'react';
+import { ItemModalText } from './utils';
+
+const buttons = [
+  // {
+  //   title: 'Редактировать',
+  //   classNames: [buttonStyles(), 'absolute z-10', 'left-0 top-0'],
+  //   text: ItemModalText.edit,
+  //   icon: <>&#10008;</>,
+  // },
+  {
+    title: 'Снять с публикации',
+    classNames: [buttonStyles(), 'absolute z-10', 'right-0 top-0'],
+    text: ItemModalText.archive,
+    icon: <>&#10008;</>,
+  },
+] as const;
 
 interface ItemButtonsProps {
   showModal: (text: ItemModalText) => void;
@@ -10,16 +25,19 @@ interface ItemButtonsProps {
 const ItemButtons = ({ showModal }: ItemButtonsProps) => {
   return (
     <>
-      <Button
-        title="Снять с публикации"
-        className={clsx('absolute z-10', 'right-0 top-0')}
-        onClick={event => {
-          event.preventDefault();
-          showModal(ItemModalText.delete);
-        }}
-      >
-        &#10008;
-      </Button>
+      {buttons.map(({ title, text, icon, classNames }) => (
+        <button
+          key={title}
+          title="Снять с публикации"
+          className={clsx(classNames)}
+          onClick={event => {
+            event.preventDefault();
+            showModal(text);
+          }}
+        >
+          {icon}
+        </button>
+      ))}
     </>
   );
 };

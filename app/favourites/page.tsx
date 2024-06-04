@@ -2,7 +2,9 @@
 
 import Item from '@/components/Item';
 import favouritesAtom from '@/state';
+import { routes } from '@/utils/constants';
 import { useAtomValue } from 'jotai';
+import Link from 'next/link';
 
 export default function Favourites<NextPage>() {
   const favourites = useAtomValue(favouritesAtom);
@@ -15,7 +17,9 @@ export default function Favourites<NextPage>() {
           <ul className="items">
             {favourites.map(post => (
               <li key={post.id}>
-                <Item post={post} />
+                <Link href={routes.post + '/' + post.id}>
+                  <Item post={post} />
+                </Link>
               </li>
             ))}
           </ul>

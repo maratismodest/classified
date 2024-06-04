@@ -1,21 +1,16 @@
 'use client';
-import RedHeart from '@/public/svg/heart-red.svg';
-import TransparentHeart from '@/public/svg/heart.svg';
 import ItemButtons from '@/components/Item/item-buttons';
+import ItemLike from '@/components/Item/ItemLike';
 import Price from '@/components/Price';
 import Popup from '@/components/ui/Popup';
 import useAuth from '@/hooks/useAuth';
-import useToast from '@/hooks/useToast';
-import favouritesAtom from '@/state';
-import updatePostPrisma from '@/utils/api/prisma/updatePost';
-import { NO_IMAGE, routes } from '@/utils/constants';
+import { NO_IMAGE } from '@/utils/constants';
+import { messages } from '@/utils/messages';
 import { Post } from '@prisma/client';
-import { useAtom } from 'jotai';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { errors, ItemModalText, success } from './utils';
+import React, { useCallback, useMemo, useState } from 'react';
+import { handleArchive, handleEdit, ItemModalText } from './utils';
 
 type ItemProps = {
   post: Post;
@@ -23,61 +18,36 @@ type ItemProps = {
 };
 
 export default function Item({ post, edit = false }: ItemProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [modalText, setModalText] = useState<ItemModalText | undefined>();
-  const { setToast } = useToast();
-  const [favourites, setFavourites] = useAtom(favouritesAtom);
   const { user } = useAuth();
-  const { id, preview, price, categoryId, description, images } = post;
-
-  const liked = useMemo(() => !!favourites.find(x => x.id === id), [favourites, id]);
-
-  const hideModal = useCallback(() => setIsOpen(false), []);
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalText, setModalText] = useState<ItemModalText | undefined>();
+  const { published, preview, price, description } = post;
 
   const showModal = (text: ItemModalText) => {
     setModalText(text);
     setIsOpen(true);
   };
 
+  const hideModal = useCallback(() => setIsOpen(false), []);
+
   const handleFunction = async () => {
     try {
       if (modalText === ItemModalText.edit) {
-        router.push(routes.edit + '/' + id);
+        await handleEdit(post, router);
         return;
       }
-      if (modalText === ItemModalText.delete) {
-        await updatePostPrisma({ ...post, published: false });
-        setToast(true);
-        const refetchButton = document.getElementById('refetch-posts');
-        if (refetchButton) {
-          refetchButton.click();
-        }
-        alert(success.archive);
+      if (modalText === ItemModalText.archive) {
+        await handleArchive(post);
         return;
       }
     } catch (e) {
-      console.log(e);
-      alert(errors.wentWrong);
+      console.error(modalText, e);
+      alert(messages.somethingWentWrong);
     } finally {
       setIsOpen(false);
     }
   };
-
-  const handleFavourite = useCallback(
-    (e: React.SyntheticEvent) => {
-      e.preventDefault();
-      const currentList = liked ? favourites.filter(x => x.id !== id) : [...favourites, post];
-      setFavourites(currentList as any);
-    },
-    [id, favourites, liked, post, setFavourites]
-  );
-
-  useEffect(() => {
-    return () => {
-      setIsOpen(false);
-    };
-  }, []);
 
   const buttons = useMemo(
     () => [
@@ -89,18 +59,7 @@ export default function Item({ post, edit = false }: ItemProps) {
 
   return (
     <>
-      <Popup
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        text={modalText ?? 'InnoAds'}
-        buttons={buttons}
-      />
-      <Link
-        href={`${routes.post}/${id}`}
-        className="relative flex flex-col overflow-hidden rounded-2xl shadow"
-        data-testid={`item-${id}`}
-        data-category={categoryId}
-      >
+      <div className="relative flex flex-col overflow-hidden rounded-2xl shadow">
         <div className="relative block aspect-square transition-all hover:scale-105">
           <Image
             fill
@@ -116,16 +75,20 @@ export default function Item({ post, edit = false }: ItemProps) {
         <div className="relative mx-3 my-1 overflow-hidden whitespace-nowrap font-bold lg:mx-4 lg:my-2">
           <Price price={price} />
           <h2 className="mt-auto truncate font-normal">{description}</h2>
-          <button
-            className="absolute right-0 top-0 z-10 cursor-pointer"
-            onClick={handleFavourite}
-            aria-label="Добавить в избранное"
-          >
-            {liked ? <RedHeart /> : <TransparentHeart />}
-          </button>
+          <ItemLike post={post} />
         </div>
-        {user && edit && <ItemButtons showModal={showModal} />}
-      </Link>
+        {user && user.id === post.userId && edit && (
+          <>
+            <Popup
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              text={modalText ?? 'InnoAds'}
+              buttons={buttons}
+            />
+            <ItemButtons showModal={showModal} />
+          </>
+        )}
+      </div>
     </>
   );
 }
