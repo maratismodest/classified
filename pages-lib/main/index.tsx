@@ -65,9 +65,9 @@ const Main = ({ initialPosts, defaultValues }: Props) => {
     getValues,
   } = methods;
 
-  const _published = getValues('published');
-  const _categoryId = getValues('categoryId');
-  const _furnished = getValues('furnished');
+  const _published = watch('published');
+  const _categoryId = watch('categoryId');
+  const _furnished = watch('furnished');
   const _rooms = watch('rooms');
   const _min = getValues('min');
   const _max = getValues('max');
