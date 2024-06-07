@@ -1,3 +1,5 @@
+const nextTranslate = require('next-translate-plugin');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     // experimental: {
@@ -51,4 +53,4 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+module.exports = nextTranslate(nextConfig);

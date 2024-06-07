@@ -7,6 +7,7 @@ import usePostsQuery from '@/hooks/query/usePostsQuery';
 import useAuth from '@/hooks/useAuth';
 import ProfileNoUser from '@/pages-lib/profile/ProfileNoUser';
 import buttonStyles from '@/styles/buttonStyles';
+import inputStyles from '@/styles/inputStyles';
 import { routes } from '@/utils/constants';
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import { Post } from '@prisma/client';

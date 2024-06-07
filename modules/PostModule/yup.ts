@@ -39,14 +39,20 @@ export const searchSchema = object({
   min: number().default(0),
   max: number().default(0),
   categoryId: number().default(undefined),
+  minPrice: number().default(0),
+  maxPrice: number().default(0),
+  published: boolean().default(true),
 });
 
 export const defaultSearchValues = {
+  published: true,
   rooms: [],
   furnished: undefined,
   min: 0,
   max: 0,
   categoryId: undefined,
+  minPrice: 0,
+  maxPrice: 0,
 };
 
 export const defaultValues = {

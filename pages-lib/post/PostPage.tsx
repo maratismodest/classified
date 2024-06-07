@@ -53,7 +53,7 @@ export default function PostPage<NextPage>({ post }: Props) {
 
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
+      <Dialog open={open} onClose={() => setOpen(false)} className="relative z-[9999]">
         <div className="fixed inset-0 flex items-center justify-center bg-black/50">
           <DialogPanel className="relative flex h-full w-full max-w-2xl items-center justify-center bg-black md:bg-white">
             <Image

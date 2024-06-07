@@ -6,4 +6,5 @@ import React from 'react';
 function AddPage<NextPage>() {
   return <CreatePostModule />;
 }
+
 export default withAuth(AddPage);

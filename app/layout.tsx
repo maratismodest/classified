@@ -6,8 +6,11 @@ import NextAuthProvider from '@/context/NextAuthContext';
 import QueryProvider from '@/context/QueryContext';
 import ToastProvider from '@/context/ToastContext';
 import type { Metadata } from 'next';
+import useTranslation from 'next-translate/useTranslation';
 import localFont from 'next/font/local';
 import React, { Suspense } from 'react';
+import i18n from '@/i18n';
+import { redirect } from 'next/navigation';
 import './globals.css';
 
 const geistSans = localFont({
@@ -24,13 +27,15 @@ export const metadata: Metadata = {
   description: 'Доска недвижимости в Софии',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+}
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
+  const { lang } = useTranslation('common');
+  console.log('lang', lang);
+  if (!i18n.locales.includes(lang)) redirect(`/${i18n.defaultLocale}/${lang}`);
   return (
-    <html lang="ru">
+    <html lang={lang}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Suspense>
           <QueryProvider>

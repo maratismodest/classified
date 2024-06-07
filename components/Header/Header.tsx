@@ -4,14 +4,13 @@ import { routes } from '@/utils/constants';
 import clsx from 'clsx';
 import Link from 'next/link';
 import React from 'react';
-import HeaderButtons, { menu } from './HeaderButtons';
-import HomeSvg from '@/public/svg/home.svg';
+import HeaderButtons from './HeaderButtons';
 
 export default function Header() {
   return (
     <header
       className={clsx(
-        'fixed inset-x-0 top-0 z-[9999] h-[52px] bg-gray text-black',
+        'fixed inset-x-0 top-0 z-[40] h-[52px] bg-gray text-black',
         'standalone:bottom-0 standalone:top-auto standalone:h-[80px]' // for pwa
       )}
     >

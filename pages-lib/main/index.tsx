@@ -1,14 +1,16 @@
 'use client';
 import Posts from '@/components/Posts';
+import RangeSliderUi from '@/components/RangeSlider/RangeSlider';
 import Spinner from '@/components/ui/Spinner';
 import usePostsQuery from '@/hooks/query/usePostsQuery';
-import { defaultSearchValues, ISearchFormInput, searchSchema } from '@/modules/PostModule/yup';
+import useApp from '@/hooks/useApp';
+import { ISearchFormInput, searchSchema } from '@/modules/PostModule/yup';
 import { furnishedOptions } from '@/pages-lib/main/utils';
 import buttonStyles from '@/styles/buttonStyles';
+import { GetPostsParams } from '@/utils/api/client/fetchApiPosts';
 import cleanObject from '@/utils/cleanObject';
 import getBooleanUndefinded from '@/utils/getBooleanOrUndefined';
 import scrollToTop from '@/utils/scrollToTop';
-import RangeSliderUi from '@/components/RangeSlider/RangeSlider';
 import {
   Checkbox,
   Disclosure,
@@ -25,9 +27,10 @@ import {
   TabPanels,
 } from '@headlessui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import type { Post } from '@prisma/client';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 
 const DynamicLeafletMap = dynamic(() => import('@/components/Map/Map'), {
@@ -35,17 +38,19 @@ const DynamicLeafletMap = dynamic(() => import('@/components/Map/Map'), {
 });
 
 interface Props {
-  minPrice: number;
-  maxPrice: number;
-  categories: { value: string; label: string }[];
+  initialPosts: Post[];
+  defaultValues: any;
 }
 
-const Main = ({ minPrice, maxPrice, categories }: Props) => {
+const Main = ({ initialPosts, defaultValues }: Props) => {
+  const { categories } = useApp();
   const [page, setPage] = useState(1);
+
+  console.log('defaultValues', defaultValues);
 
   const methods = useForm<ISearchFormInput>({
     resolver: yupResolver(searchSchema),
-    defaultValues: { ...defaultSearchValues, min: minPrice, max: maxPrice },
+    defaultValues: defaultValues,
   });
 
   const {
@@ -57,28 +62,33 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
     trigger,
     control,
     watch,
+    getValues,
   } = methods;
 
-  const _rooms = watch('rooms');
-  const _min = watch('min');
-  const _max = watch('max');
-  const _furnished = watch('furnished');
-  const _categoryId = watch('categoryId');
+  const _published = getValues('published');
+  const _categoryId = getValues('categoryId');
+  const _furnished = getValues('furnished');
+  const _rooms = getValues('rooms');
+  const _min = getValues('min');
+  const _max = getValues('max');
+  const _minPrice = watch('minPrice');
+  const _maxPrice = watch('maxPrice');
 
-  const options = useMemo(
-    () =>
-      cleanObject({
-        published: true,
-        furnished: _furnished,
-        rooms: _rooms.length > 0 ? _rooms : undefined,
-        min: _min,
-        max: _max,
-        categoryId: _categoryId,
-      }),
-    [_furnished, _rooms, _min, _max, _categoryId]
-  );
+  const _options: Partial<GetPostsParams> = cleanObject({
+    published: _published,
+    categoryId: _categoryId,
+    furnished: _furnished,
+    rooms: _rooms.length > 0 ? _rooms : undefined,
+    min: _minPrice,
+    max: _maxPrice,
+  });
 
-  const { posts, postsLoading, postsRefetch, postsError } = usePostsQuery(options);
+  const {
+    posts = initialPosts,
+    postsLoading,
+    postsRefetch,
+    postsError,
+  } = usePostsQuery(_options, false);
 
   if (!posts) {
     return <Spinner />;
@@ -90,21 +100,22 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
 
   const onSubmit: SubmitHandler<ISearchFormInput> = async (data: ISearchFormInput) => {
     console.log('data', data);
-    await postsRefetch(options);
+    // @ts-ignore
+    postsRefetch(_options);
   };
 
   return (
     <>
       <h1 className="text-lg">Результат фильтра: {posts?.length}</h1>
       <Disclosure defaultOpen>
-        <DisclosureButton className="border-borderColor rounded border">
+        <DisclosureButton className="rounded border border-borderColor">
           показать/скрыть фильтры
         </DisclosureButton>
         <DisclosurePanel className="text-gray-500 pt-1">
           <FormProvider {...methods}>
             <Fieldset>
               <form
-                className="border-borderColor grid grid-cols-1 items-start gap-2 rounded border px-4 py-2 md:grid-cols-5"
+                className="grid grid-cols-1 items-start gap-2 rounded border border-borderColor px-4 py-2 md:grid-cols-5"
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <Controller
@@ -176,7 +187,7 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
                         <Label>{number}</Label>
                         <Checkbox
                           checked={Boolean(_rooms.includes(number))}
-                          className="border-borderColor group block size-5 rounded border bg-white data-[checked]:bg-blue"
+                          className="group block size-5 rounded border border-borderColor bg-white data-[checked]:bg-blue"
                           onChange={() =>
                             setValue(
                               'rooms',
@@ -207,15 +218,15 @@ const Main = ({ minPrice, maxPrice, categories }: Props) => {
 
                 <Field>
                   <RangeSliderUi
-                    min={minPrice}
-                    max={maxPrice}
-                    minValue={_min}
-                    maxValue={_max}
+                    min={_min}
+                    max={_max}
+                    minValue={_minPrice}
+                    maxValue={_maxPrice}
                     setMinValue={val => {
-                      setValue('min', val);
+                      setValue('minPrice', val);
                     }}
                     setMaxValue={val => {
-                      setValue('max', val);
+                      setValue('maxPrice', val);
                     }}
                   />
                 </Field>
