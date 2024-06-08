@@ -5,6 +5,7 @@ import { getAllCategories } from '@/prisma/services/categories';
 import buttonStyles from '@/styles/buttonStyles';
 import fetchAd from '@/utils/api/prisma/fetchAd';
 import fetchAds from '@/utils/api/prisma/fetchAds';
+import fetchUser from '@/utils/api/prisma/fetchUser';
 import { routes } from '@/utils/constants';
 import mapCategories from '@/utils/mapCategories';
 import clsx from 'clsx';
@@ -34,12 +35,16 @@ export const revalidate = 3600;
 
 export default async function Post({ params: { id } }: AdPageProps) {
   const post = await fetchAd(Number(id));
+
   const _categories = await getAllCategories();
   const categories = mapCategories(_categories);
 
   if (!post || categories.length === 0) {
     return notFound();
   }
+
+  const user = await fetchUser(post.userId);
+
   if (!post) {
     return (
       <div>
@@ -101,9 +106,9 @@ export default async function Post({ params: { id } }: AdPageProps) {
       </ul>
       <time className="mt-5">Опубликовано: {dayjs(createdAt).format('DD.MM.YYYY')}</time>
 
-      <p>Позвонить автору</p>
-      <a href="tel:123-456-7890" target="_blank" className={clsx(buttonStyles())}>
-        123-456-7890
+      <p>Связаться с автором</p>
+      <a href={'mailto:' + user.email} target="_blank" className={clsx(buttonStyles())}>
+        {user.email}
       </a>
 
       <Link href={routes.users + '/' + userId} className={clsx(buttonStyles(), 'mt-4 !block')}>
