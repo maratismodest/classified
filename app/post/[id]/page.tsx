@@ -43,8 +43,6 @@ export default async function Post({ params: { id } }: AdPageProps) {
     return notFound();
   }
 
-  const user = await fetchUser(post.userId);
-
   if (!post) {
     return (
       <div>
@@ -66,6 +64,7 @@ export default async function Post({ params: { id } }: AdPageProps) {
     furnished,
     address,
     categoryId,
+    user,
   } = post;
 
   const properties = [
